@@ -101,13 +101,15 @@ public class BankAccountEntity {
         this.currency = currency;
         return this;
     }
+
     public String getOwnerUsername() {
         return ownerUsername;
     }
-    
+
     public BankAccountEntity setOwnerUsername(String ownerUsername) {
         this.ownerUsername = ownerUsername;
-        return this;}
+        return this;
+    }
 
     public Instant getCreatedTimestamp() {
         return createdTimestamp;

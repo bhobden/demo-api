@@ -77,11 +77,9 @@ public class AccountService extends AbstractService {
         response.setBalance(account.getBalance());
         response.setSortCode(account.getSortCode());
         response.setCurrency(account.getCurrency());
-        // Convert timestamps to LocalDateTime in UTC as per spec but would consider
-        // using instance/epoch for more consistency.. plus i should do a load of null
-        // checking and abstract this to its own method.
-        response.setCreatedTimestamp(LocalDateTime.ofInstant(account.getCreatedTimestamp(), ZoneId.of("UTC")));
-        response.setUpdatedTimestamp(LocalDateTime.ofInstant(account.getUpdatedTimestamp(), ZoneId.of("UTC")));
+        // Convert timestamps to LocalDateTime in UTC as per spec.
+        response.setCreatedTimestamp(convertInstantToLocalDateTimeUTC(account.getCreatedTimestamp()));
+        response.setUpdatedTimestamp(convertInstantToLocalDateTimeUTC(account.getUpdatedTimestamp()));
         return response;
     }
 
@@ -148,5 +146,15 @@ public class AccountService extends AbstractService {
             handleException(e);
             return null; // Unreachable, but required for compilation
         }
+    }
+
+    /**
+     * Converts an Instant to LocalDateTime in UTC, handling nulls safely.
+     */
+    private LocalDateTime convertInstantToLocalDateTimeUTC(Instant instant) {
+        if (instant == null) {
+            return null;
+        }
+        return LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
     }
 }

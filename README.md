@@ -1,7 +1,7 @@
 # EagleBank API
 
 A secure, modular Spring Boot 3.x REST API for user and bank account management, featuring JWT authentication, validation, and metrics.  
-Supports H2 (in-memory, default) and MySQL (via profile) for persistence.  
+Supports H2 (in-memory, default).  
 Includes a React-based UI in `/eaglebank-ui`.
 
 ---
@@ -11,7 +11,7 @@ Includes a React-based UI in `/eaglebank-ui`.
 - Java 21
 - Spring Boot 3.x
 - Spring Security + JWT
-- H2 (default) / MySQL (optional)
+- H2 (default)
 - Maven
 - Docker-ready
 - Micrometer metrics
@@ -210,8 +210,6 @@ curl -X DELETE http://localhost:8080/api/accounts/{accountNumber} \
 
 - **Port in use?**  
   Change the port in `src/main/resources/application.properties`.
-- **MySQL connection issues?**  
-  Ensure Docker MySQL is running and credentials match your config.
 - **JWT errors?**  
   Make sure you include the `Authorization: Bearer <token>` header.
 

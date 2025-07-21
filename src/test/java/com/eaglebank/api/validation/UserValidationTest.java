@@ -73,7 +73,7 @@ class UserValidationTest {
     @Test
     void validateUserAuthenticated_authenticated_throwsExceptionWithTypeAndMessage() {
         try (MockedStatic<AuthUtils> authUtilsMock = mockStatic(AuthUtils.class)) {
-            authUtilsMock.when(AuthUtils::isAuthenticated).thenReturn(true);
+            authUtilsMock.when(AuthUtils::isAuthenticated).thenReturn(false);
             ValidationException ex = assertThrows(ValidationException.class, () -> userValidation.validateUserAuthenticated());
             assertEquals(ValidationExceptionType.AUTH_UNAUTHORIZED, ex.getType());
             assertTrue(StringUtils.isNotBlank(ex.getMessage()));
@@ -180,7 +180,7 @@ class UserValidationTest {
     @Test
     void validateUserAuthenticated_notAuthenticated_doesNotThrow() {
         try (MockedStatic<AuthUtils> authUtilsMock = mockStatic(AuthUtils.class)) {
-            authUtilsMock.when(AuthUtils::isAuthenticated).thenReturn(false);
+            authUtilsMock.when(AuthUtils::isAuthenticated).thenReturn(true);
             assertDoesNotThrow(() -> userValidation.validateUserAuthenticated());
         }
     }

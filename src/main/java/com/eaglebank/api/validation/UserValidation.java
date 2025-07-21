@@ -120,7 +120,6 @@ public class UserValidation extends AbstractValidation {
      * @throws ValidationException if the user is not authenticated.
      */
     public void validateUserAuthenticated() {
-        System.out.println("Validating user authentication status..." + AuthUtils.isAuthenticated());
         if (!AuthUtils.isAuthenticated()) {
             invalid(ValidationExceptionType.AUTH_UNAUTHORIZED);
         }

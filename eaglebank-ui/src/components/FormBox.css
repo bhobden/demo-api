@@ -1,0 +1,198 @@
+body, #root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-box {
+  min-width: 550px;
+  margin: 0;
+  padding: 2rem 2.5rem;
+  background: #fff;
+  border-radius: 1.25rem;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.10), 0 1.5px 4px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.form-box__form,
+.form-box__fieldset {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.form-box__title {
+  margin-bottom: 0.5rem;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1a237e;
+  text-align: center;
+}
+
+.form-box__label {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 0.2rem;
+}
+
+.form-box__input {
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #bdbdbd;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+  outline: none;
+}
+
+.form-box__input:focus {
+  border-color: #1976d2;
+  background: #f5faff;
+}
+
+.form-box__button {
+  margin-top: 0.5rem;
+  padding: 0.8rem 0;
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.form-box__button:hover,
+.form-box__button:focus {
+  background: #1565c0;
+}
+
+/* Danger button for destructive actions */
+.form-box__button[style*="background: #c62828"] {
+  background: #c62828 !important;
+}
+.form-box__button[style*="background: #c62828"]:hover,
+.form-box__button[style*="background: #c62828"]:focus {
+  background: #b71c1c !important;
+}
+
+.form-box__error {
+  background: #ffebee;
+  color: #c62828;
+  border-radius: 0.4rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.98rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-box__success {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border-radius: 0.4rem;
+  padding: 0.6rem 1rem;
+  font-size: 0.98rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.form-box__fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  background: #fafbfc;
+}
+
+.form-box__legend {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: #1976d2;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+.form-box__footer {
+  margin-top: 1.2rem;
+  text-align: center;
+  font-size: 1rem;
+  color: #444;
+}
+
+.form-box__link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 0.2rem;
+  transition: color 0.2s;
+}
+
+.form-box__link:hover,
+.form-box__link:focus {
+  color: #1565c0;
+  text-decoration: underline;
+}
+
+/* Menu styles */
+.menu-nav {
+  margin-bottom: 1.5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.menu-nav__list {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu-nav__link {
+  color: #1976d2;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.3rem;
+  transition: background 0.18s, color 0.18s;
+}
+
+.menu-nav__link:hover,
+.menu-nav__link:focus {
+  background: #e3f2fd;
+  color: #1565c0;
+  outline: none;
+}
+
+.menu-nav__link--active {
+  background: #1976d2;
+  color: #fff;
+}
+
+/* Account list styles */
+.account-list__item {
+  width: 100%;
+  text-align: left;
+  background: #f5faff;
+  border: 1.5px solid #e3eafc;
+  border-radius: 0.6rem;
+  padding: 1rem 1.2rem;
+  cursor: pointer;
+  transition: background 0.18s, border-color 0.18s;
+  font-size: 1rem;
+  margin: 0;
+  outline: none;
+  box-shadow: none;
+  display: block;
+}
+
+.account-list__item:hover,
+.account-list__item:focus {
+  background: #e3f2fd;
+  border-color: #1976d2;
+}

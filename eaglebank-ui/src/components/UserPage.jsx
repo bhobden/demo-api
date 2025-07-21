@@ -1,14 +1,16 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { deleteUser, getUser } from '../api';
 import { useEffect, useState } from 'react';
 import Menu from './Menu';
+import './FormBox.css';
 
 export default function UserPage() {
   const { userId } = useParams();
   const { jwt, setJwt } = useAuth();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (jwt) {
@@ -23,7 +25,7 @@ export default function UserPage() {
       try {
         await deleteUser(userId, jwt);
         setJwt(null);
-        navigate(`/login`);
+        navigate(`/`);
       } catch (error) {
         console.error("Failed to delete user:", error);
         setError(error);  
@@ -32,16 +34,35 @@ export default function UserPage() {
   };
 
   return (
-    <div>
+    <div className="form-box" role="main" aria-label="User info">
+      <Menu />
+      <h2 className="form-box__title" style={{marginBottom: "1rem"}}>User Info</h2>
       {error && (
-        <div className="error">
-          <strong>Error:</strong> {JSON.stringify(error, null, 2)}
+        <div className="form-box__error" role="alert">
+          <strong>Error:</strong> {typeof error === "string" ? error : JSON.stringify(error, null, 2)}
         </div>
       )}
-      <h2>User Info</h2>
-      <Menu />
-      {user ? <pre>{JSON.stringify(user, null, 2)}</pre> : <p>Loading...</p>}
-      <button onClick={handleDelete}>
+      {user ? (
+        <div className="form-box__fieldset" style={{marginBottom: "1.5rem"}}>
+          <div style={{marginBottom: "0.5rem"}}><strong>Name:</strong> {user.name}</div>
+          <div style={{marginBottom: "0.5rem"}}><strong>Email:</strong> {user.email}</div>
+          <div style={{marginBottom: "0.5rem"}}><strong>Phone:</strong> {user.phoneNumber}</div>
+          <div style={{marginBottom: "0.5rem"}}><strong>Address:</strong>
+            <div style={{marginLeft: "1rem"}}>
+              {user.address?.line1 && <div>{user.address.line1}</div>}
+              {user.address?.line2 && <div>{user.address.line2}</div>}
+              {user.address?.line3 && <div>{user.address.line3}</div>}
+              {user.address?.town && <div>{user.address.town}</div>}
+              {user.address?.county && <div>{user.address.county}</div>}
+              {user.address?.postcode && <div>{user.address.postcode}</div>}
+            </div>
+          </div>
+          <div style={{marginBottom: "0.5rem"}}><strong>ID:</strong> {user.id}</div>
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
+      <button onClick={handleDelete} className="form-box__button" style={{background: "#c62828"}}>
         Delete User
       </button>
     </div>

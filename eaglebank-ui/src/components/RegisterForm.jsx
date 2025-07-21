@@ -1,19 +1,9 @@
-import { useParams, useNavigate } from 'react-router-dom';
-import { updateUser, getUser } from "../api";
-import { useAuth } from '../AuthContext';
-import { useEffect, useState } from 'react';
-import Menu from './Menu';
-import './FormBox.css';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { createUser } from "../api";
+import "./FormBox.css";
 
-export default function UpdateUserForm() {
-    const { userId } = useParams();
-    const { jwt } = useAuth();
-    const navigate = useNavigate();
-
-    const [error, setError] = useState("");
-    const [success, setSuccess] = useState("");
-    const [dbUser, setDbUser] = useState(null);
-
+export default function RegisterForm() {
     const [form, setForm] = useState({
         name: "",
         email: "",
@@ -28,41 +18,20 @@ export default function UpdateUserForm() {
             postcode: ""
         }
     });
-
-    useEffect(() => {
-        if (jwt) {
-            getUser(userId, jwt).then(setDbUser).catch(e => setError("Failed to load user."));
-        }
-    }, [jwt, userId]);
-
-    useEffect(() => {
-        if (dbUser) {
-            const { id, createdTimestamp, updatedTimestamp, ...rest } = dbUser;
-            setForm({
-                ...rest,
-                password: "", // leave password blank
-                address: {
-                    line1: rest.address?.line1 || "",
-                    line2: rest.address?.line2 || "",
-                    line3: rest.address?.line3 || "",
-                    town: rest.address?.town || "",
-                    county: rest.address?.county || "",
-                    postcode: rest.address?.postcode || ""
-                }
-            });
-        }
-    }, [dbUser]);
+    const [error, setError] = useState("");
+    const [success, setSuccess] = useState("");
+    const navigate = useNavigate();
 
     function handleChange(e) {
         const { name, value } = e.target;
         if (name.startsWith("address.")) {
-            const key = name.split(".")[1];
-            setForm(prev => ({
-                ...prev,
-                address: { ...prev.address, [key]: value }
+            const addressField = name.split(".")[1];
+            setForm(f => ({
+                ...f,
+                address: { ...f.address, [addressField]: value }
             }));
         } else {
-            setForm(prev => ({ ...prev, [name]: value }));
+            setForm(f => ({ ...f, [name]: value }));
         }
     }
 
@@ -71,33 +40,24 @@ export default function UpdateUserForm() {
         setError("");
         setSuccess("");
         try {
-            const result = await updateUser(userId, form, jwt);
+            const result = await createUser(form);
             if (result?.id) {
-                setSuccess("User updated successfully!");
-                setTimeout(() => navigate("/user/" + result.id), 1200);
+                setSuccess("Registration successful! You can now log in.");
+                setTimeout(() => navigate("/", { state: { prefillUsername: result.id } }), 1200);
             } else {
-                setError(result?.message || "Update failed.");
+                setError(result?.message || "Registration failed. Please check your details.");
             }
         } catch (err) {
-            setError("Update failed.");
+            setError(err?.message || "Registration failed. Please check your details.");
         }
     }
 
     return (
-        <div className="form-box" role="main" aria-label="Update user form">
-            <Menu />
-            <form onSubmit={handleSubmit} className="form-box__form" aria-labelledby="update-title">
-                <h2 id="update-title" className="form-box__title">Update User</h2>
-                {error && (
-                    <div className="form-box__error" role="alert">
-                        <strong>Error:</strong> {typeof error === "string" ? error : JSON.stringify(error, null, 2)}
-                    </div>
-                )}
-                {success && (
-                    <div className="form-box__success" role="status">
-                        {success}
-                    </div>
-                )}
+        <div className="form-box" role="main" aria-label="Register form">
+            <form onSubmit={handleSubmit} className="form-box__form" aria-labelledby="register-title">
+                <h2 id="register-title" className="form-box__title">Register</h2>
+                {error && <div className="form-box__error" role="alert">{error}</div>}
+                {success && <div className="form-box__success" role="status">{success}</div>}
 
                 <label htmlFor="name" className="form-box__label">Name</label>
                 <input
@@ -105,7 +65,7 @@ export default function UpdateUserForm() {
                     name="name"
                     type="text"
                     className="form-box__input"
-                    placeholder="Name"
+                    placeholder="Full Name"
                     value={form.name}
                     onChange={handleChange}
                     required
@@ -129,7 +89,7 @@ export default function UpdateUserForm() {
                     name="phoneNumber"
                     type="tel"
                     className="form-box__input"
-                    placeholder="Phone Number"
+                    placeholder="+441234567890"
                     value={form.phoneNumber}
                     onChange={handleChange}
                     required
@@ -144,6 +104,7 @@ export default function UpdateUserForm() {
                     placeholder="Password"
                     value={form.password}
                     onChange={handleChange}
+                    required
                 />
 
                 <fieldset className="form-box__fieldset">
@@ -154,7 +115,7 @@ export default function UpdateUserForm() {
                         name="address.line1"
                         type="text"
                         className="form-box__input"
-                        placeholder="Line 1"
+                        placeholder="Address line 1"
                         value={form.address.line1}
                         onChange={handleChange}
                         required
@@ -165,7 +126,7 @@ export default function UpdateUserForm() {
                         name="address.line2"
                         type="text"
                         className="form-box__input"
-                        placeholder="Line 2"
+                        placeholder="Address line 2"
                         value={form.address.line2}
                         onChange={handleChange}
                     />
@@ -175,17 +136,17 @@ export default function UpdateUserForm() {
                         name="address.line3"
                         type="text"
                         className="form-box__input"
-                        placeholder="Line 3"
+                        placeholder="Address line 3"
                         value={form.address.line3}
                         onChange={handleChange}
                     />
-                    <label htmlFor="town" className="form-box__label">Town</label>
+                    <label htmlFor="town" className="form-box__label">Town/City</label>
                     <input
                         id="town"
                         name="address.town"
                         type="text"
                         className="form-box__input"
-                        placeholder="Town"
+                        placeholder="Town or City"
                         value={form.address.town}
                         onChange={handleChange}
                         required
@@ -214,8 +175,12 @@ export default function UpdateUserForm() {
                     />
                 </fieldset>
 
-                <button type="submit" className="form-box__button">Update User</button>
+                <button type="submit" className="form-box__button">Register</button>
             </form>
+            <div className="form-box__footer">
+                <span>Already have an account? </span>
+                <Link to="/" className="form-box__link">Login</Link>
+            </div>
         </div>
     );
 }

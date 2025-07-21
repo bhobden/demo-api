@@ -1,6 +1,7 @@
 package com.eaglebank.api.validation;
 
 import com.eaglebank.api.validation.exception.HttpRuntimeException;
+import com.eaglebank.api.validation.exception.ValidationException;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
 
 /**
@@ -14,13 +15,13 @@ import com.eaglebank.api.validation.exception.ValidationExceptionType;
 public abstract class AbstractValidation {
 
     /**
-     * Throws a {@link HttpRuntimeException} with the message and status code
+     * Throws a {@link ValidationException} with the message and status code
      * from the provided {@link ValidationExceptionType}.
      *
      * @param reason The reason for validation failure.
-     * @throws HttpRuntimeException always thrown to indicate validation failure.
+     * @throws ValidationException always thrown to indicate validation failure.
      */
     protected void invalid(ValidationExceptionType reason) {
-        throw new HttpRuntimeException(reason.getMessage(), reason.getStatusCode());
+        throw new ValidationException(reason);
     }
 }

@@ -23,9 +23,14 @@ export default function UserPage() {
   async function handleDelete() {
     if (jwt) {
       try {
-        await deleteUser(userId, jwt);
-        setJwt(null);
-        navigate(`/`);
+        const response = await deleteUser(userId, jwt);
+        if(!response) {
+          setJwt(null);
+          navigate(`/`);
+        }else {
+          setError(response);
+        }
+       
       } catch (error) {
         console.error("Failed to delete user:", error);
         setError(error);  

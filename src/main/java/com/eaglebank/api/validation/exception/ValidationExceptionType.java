@@ -16,7 +16,8 @@ public enum ValidationExceptionType {
     USER_INVALID_EMAIL("Invalid email passed", HTTP_BAD_REQUEST), 
     USER_INVALID_ADDRESS("Invalid address passed", HTTP_BAD_REQUEST), 
     USER_INVALID_PHONE_NUMBER("Invalid phone number", HTTP_BAD_REQUEST), 
-    AUTH_INVALID_USER("Invalid password credentials", HTTP_BAD_REQUEST);
+    AUTH_INVALID_USER("Invalid password credentials", HTTP_BAD_REQUEST), 
+    AUTH_USER_HAS_ACCOUNTS("User has associated accounts", HTTP_CONFLICT);
 
     private final String message;
     private final Integer statusCode;

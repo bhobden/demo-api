@@ -5,7 +5,9 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
+import com.eaglebank.api.dao.AccountDAO;
 import com.eaglebank.api.dao.UserDAO;
 import com.eaglebank.api.model.address.Address;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
@@ -30,6 +32,9 @@ public class UserValidation extends AbstractValidation {
      */
     @Autowired
     protected UserDAO userDAO;
+
+    @Autowired
+    protected AccountDAO accountDAO;
 
     /**
      * Regex pattern for validating international phone numbers (E.164 format).
@@ -203,5 +208,11 @@ public class UserValidation extends AbstractValidation {
         validatePhoneNumber(newUser.getPhoneNumber());
         validateEmail(newUser.getEmail());
         validatePassword(newUser.getPassword());
+    }
+
+    public void validateUserHasNoAccounts(String userId) {
+        if(!CollectionUtils.isEmpty(accountDAO.getUsersAccount(userId))){
+            invalid(ValidationExceptionType.AUTH_USER_HAS_ACCOUNTS);
+        }
     }
 }

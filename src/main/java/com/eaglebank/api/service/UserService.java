@@ -193,7 +193,7 @@ public class UserService extends AbstractService {
 
             userValidation.validateUserAuthenticated();
             userValidation.validateRequesterCanAccessUser(userId);
-
+            userValidation.validateUserHasNoAccounts(userId);
             UserEntity user = userDAO.getUser(userId);
             userValidation.validateUserExists(user);
 

@@ -46,7 +46,7 @@ class UserValidationTest {
 
     @Test
     void validateUserExists_null_throwsExceptionWithTypeAndMessage() {
-        ValidationException ex = assertThrows(ValidationException.class, () -> userValidation.validateUserExists(null));
+        ValidationException ex = assertThrows(ValidationException.class, () -> userValidation.validateUserExists((UserEntity) null));
         assertEquals(ValidationExceptionType.AUTH_INVALID_USER, ex.getType());
         assertTrue(StringUtils.isNotBlank(ex.getMessage()));
     }

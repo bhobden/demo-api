@@ -3,7 +3,7 @@ package com.eaglebank.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.eaglebank.api.repository.UserRepository;
+import com.eaglebank.api.dao.UserDAO;
 import com.eaglebank.api.security.JwtUtil;
 import com.eaglebank.api.validation.UserValidation;
 import com.eaglebank.api.validation.exception.CommonException;
@@ -16,7 +16,7 @@ public abstract class AbstractService {
     protected JwtUtil jwtUtil;
 
     @Autowired
-    protected UserRepository userRepository;
+    protected UserDAO userDAO;
 
     @Autowired
     protected UserValidation userValidation;

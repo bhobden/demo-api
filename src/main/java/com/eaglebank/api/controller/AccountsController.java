@@ -6,11 +6,10 @@ import com.eaglebank.api.model.dto.response.ListBankAccountsResponse;
 import com.eaglebank.api.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/accounts")
+@RequestMapping(ControllerConstants.ACCOUNTS_PATH)
 public class AccountsController {
 
     @Autowired
@@ -18,17 +17,14 @@ public class AccountsController {
 
     @PostMapping
     public ResponseEntity<BankAccountResponse> createAccount(
-            @RequestBody CreateBankAccountRequest request,
-            Authentication authentication) {
-
-        String username = authentication.getName();
-        BankAccountResponse response = accountService.createAccount(request, username);
+            @RequestBody CreateBankAccountRequest request) {
+        BankAccountResponse response = accountService.createAccount(request);
         return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping
-    public ResponseEntity<ListBankAccountsResponse> listAccounts(Authentication authentication) {
-        ListBankAccountsResponse response = accountService.listAccounts(authentication);
+    public ResponseEntity<ListBankAccountsResponse> listAccounts() {
+        ListBankAccountsResponse response = accountService.listAccounts();
         return ResponseEntity.ok(response);
     }
 }

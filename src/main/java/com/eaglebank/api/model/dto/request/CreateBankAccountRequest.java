@@ -1,16 +1,16 @@
 package com.eaglebank.api.model.dto.request;
 
-import com.eaglebank.api.model.BankAccount.AccountType;
+import com.eaglebank.api.model.BankAccountEntity.AccountType;
 
 public class CreateBankAccountRequest {
     private String name;
     private AccountType accountType;
 
-    public String getName() {
+    public String getAccountName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setAccountName(String name) {
         this.name = name;
     }
 

@@ -13,14 +13,14 @@ import org.springframework.web.bind.annotation.*;
  * REST controller to handle login requests and issue JWTs.
  */
 @RestController
-@RequestMapping(ControllerConstants.LOGIN_ENDPOINT)
+@RequestMapping(ControllerConstants.LOGIN_PATH)
 public class AuthController {
 
     @Autowired
     private UserService userService;
 
     /**
-     * POST /api/login
+     * POST
      * Validates credentials and returns a JWT token if successful.
      */
     @PostMapping

@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(ControllerConstants.USERS_WITHID_ENDPOINT)
+@RequestMapping(ControllerConstants.USERS_WITHID_PATH)
 public class UserController {
 
     @Autowired

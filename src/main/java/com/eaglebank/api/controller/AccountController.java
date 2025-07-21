@@ -3,14 +3,11 @@ package com.eaglebank.api.controller;
 import com.eaglebank.api.model.dto.request.UpdateBankAccountRequest;
 import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.service.AccountService;
-import jakarta.validation.constraints.Pattern;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/v1/accounts/{accountNumber}")
+@RequestMapping(ControllerConstants.ACCOUNTS_WITHID_PATH)
 public class AccountController {
 
     private final AccountService accountService;
@@ -21,27 +18,24 @@ public class AccountController {
 
     @GetMapping(produces = "application/json")
     public ResponseEntity<BankAccountResponse> fetchAccount(
-            @PathVariable @Pattern(regexp = "^01\\d{6}$") String accountNumber,
-            Authentication authentication) {
-        BankAccountResponse response = accountService.fetchAccountByAccountNumber(authentication, accountNumber);
+            @PathVariable("accountId") String accountId) {
+        BankAccountResponse response = accountService.getAccount(accountId);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<BankAccountResponse> updateAccount(
-            @PathVariable @Pattern(regexp = "^01\\d{6}$") String accountNumber,
-            @RequestBody UpdateBankAccountRequest updateRequest,
-            Authentication authentication) {
-        BankAccountResponse response = accountService.updateAccountByAccountNumber(authentication, accountNumber,
+            @PathVariable("accountId") String accountId,
+            @RequestBody UpdateBankAccountRequest updateRequest) {
+        BankAccountResponse response = accountService.updateAccount(accountId,
                 updateRequest);
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping(produces = "application/json")
     public ResponseEntity<Void> deleteAccount(
-            @PathVariable @Pattern(regexp = "^01\\d{6}$") String accountNumber,
-            Authentication authentication) {
-        accountService.deleteAccountByAccountNumber(authentication, accountNumber);
+            @PathVariable("accountId") String accountId) {
+        accountService.deleteAccount(accountId);
         return ResponseEntity.noContent().build();
     }
 }

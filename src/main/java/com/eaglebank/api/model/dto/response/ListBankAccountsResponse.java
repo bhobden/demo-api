@@ -9,7 +9,8 @@ public class ListBankAccountsResponse {
         return accounts;
     }
 
-    public void setAccounts(List<BankAccountResponse> accounts) {
+    public ListBankAccountsResponse setAccounts(List<BankAccountResponse> accounts) {
         this.accounts = accounts;
+        return this;
     }
 }

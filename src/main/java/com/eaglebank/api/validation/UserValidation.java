@@ -3,8 +3,10 @@ package com.eaglebank.api.validation;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.eaglebank.api.dao.UserDAO;
 import com.eaglebank.api.model.address.Address;
 import com.eaglebank.api.model.user.UserEntity;
 import com.eaglebank.api.security.AuthUtils;
@@ -16,6 +18,9 @@ import com.eaglebank.api.validation.exception.ValidationExceptionType;
  */
 @Component
 public class UserValidation extends AbstractValidation {
+
+    @Autowired
+    protected UserDAO userDAO;
 
     // Regex pattern for validating international phone numbers (E.164 format)
     private final static Pattern PHONE_REGEX = Pattern.compile("^\\+[1-9]\\d{1,14}$");
@@ -43,6 +48,16 @@ public class UserValidation extends AbstractValidation {
     }
 
     /**
+     * Validates that the user exists in the repository.
+     *
+     * @param userId The user ID to validate.
+     */
+    public void validateUserExists(String userId) {
+        UserEntity user = userDAO.getUser(userId);
+        validateUserExists(user);
+    }
+
+    /**
      * Validates that the user entity exists (is not null).
      *
      * @param user The UserEntity to validate.
@@ -51,6 +66,19 @@ public class UserValidation extends AbstractValidation {
         if (user == null) {
             invalid(ValidationExceptionType.AUTH_INVALID_USER);
         }
+        // Additional checks can be added here, such as checking if the user is active
+        // or has the necessary permissions.
+    }
+
+    /**
+     * Validates that the requester can access the specified user.
+     *
+     * @param userId The user ID being accessed.
+     */
+    public void validateCanAccessUser(String userId) {
+        validateUserAuthenticated();
+        validateRequesterCanAccessUser(userId);
+        validateUserExists(userId);
     }
 
     /**
@@ -95,7 +123,8 @@ public class UserValidation extends AbstractValidation {
      * @param address The Address object to validate.
      */
     public void validateAddress(Address address) {
-        // Ideally the validation would be broken down much further, but for now we will just check the basics
+        // Ideally the validation would be broken down much further, but for now we will
+        // just check the basics
         if (address == null || StringUtils.isBlank(address.getLine1())
                 || StringUtils.isBlank(address.getTown()) || StringUtils.isBlank(address.getCounty())
                 || StringUtils.isBlank(address.getPostcode())) {

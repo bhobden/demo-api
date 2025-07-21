@@ -2,13 +2,16 @@ package com.eaglebank.api.model.dto.response;
 
 import java.time.LocalDateTime;
 
+import com.eaglebank.api.model.BankAccountEntity.AccountType;
+import com.eaglebank.api.model.BankAccountEntity.Currency;
+
 public class BankAccountResponse {
     private String accountNumber;
     private String sortCode;
     private String name;
-    private String accountType;
+    private AccountType accountType;
     private double balance;
-    private String currency;
+    private Currency currency;
     private LocalDateTime createdTimestamp;
     private LocalDateTime updatedTimestamp;
 
@@ -28,19 +31,19 @@ public class BankAccountResponse {
         this.sortCode = sortCode;
     }
 
-    public String getName() {
+    public String getAccountName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setAccountName(String name) {
         this.name = name;
     }
 
-    public String getAccountType() {
+    public AccountType getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(String accountType) {
+    public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
 
@@ -52,11 +55,11 @@ public class BankAccountResponse {
         this.balance = balance;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 

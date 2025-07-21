@@ -1,22 +1,24 @@
 package com.eaglebank.api.model.dto.request;
 
+import com.eaglebank.api.model.BankAccountEntity.AccountType;
+
 public class UpdateBankAccountRequest {
     private String name;
-    private String accountType;
+    private AccountType accountType;
 
-    public String getName() {
+    public String getAccountName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setAccountName(String name) {
         this.name = name;
     }
 
-    public String getAccountType() {
+    public AccountType getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(String accountType) {
+    public void setAccountType(AccountType accountType) {
         this.accountType = accountType;
     }
 }

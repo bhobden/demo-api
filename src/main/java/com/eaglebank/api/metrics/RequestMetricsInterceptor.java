@@ -2,6 +2,8 @@ package com.eaglebank.api.metrics;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -11,7 +13,7 @@ public class RequestMetricsInterceptor implements HandlerInterceptor {
     private final ThreadLocal<MetricScope> currentScope = new ThreadLocal<>();
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public boolean preHandle(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull Object handler) {
         String endpoint = request.getRequestURI();
         String timerName = "eaglebank.request.duration";
 

@@ -7,20 +7,13 @@ import com.eaglebank.api.model.dto.request.LoginRequest;
 import com.eaglebank.api.model.dto.request.UpdateUserRequest;
 import com.eaglebank.api.model.dto.response.UserResponse;
 import com.eaglebank.api.model.user.UserEntity;
-import com.eaglebank.api.repository.UserRepository;
 import com.eaglebank.api.security.IdGenerator;
-import com.eaglebank.api.security.JwtUtil;
-import com.eaglebank.api.validation.UserValidation;
 import com.eaglebank.api.validation.exception.ValidationException;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
 
-import io.jsonwebtoken.lang.Objects;
-
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 /**
@@ -42,7 +35,7 @@ public class UserService extends AbstractService {
     public Object getJWTToken(LoginRequest request) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.generate.duration")) {
 
-            UserEntity user = userRepository.findById(request.getUsername());
+            UserEntity user = userDAO.getUser(request.getUsername());
             if (user == null) {
                 throw new ValidationException(ValidationExceptionType.AUTH_INVALID_CREDENTIALS);
             }
@@ -73,7 +66,7 @@ public class UserService extends AbstractService {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.create.duration")) {
             // Check if user already exists
             String newId = IdGenerator.generateUserId();
-            if (userRepository.findById(newId) != null) {
+            if (userDAO.getUser(newId) != null) {
                 throw new ValidationException(ValidationExceptionType.ID_ALREADY_EXISTS);
             }
 
@@ -90,7 +83,7 @@ public class UserService extends AbstractService {
             user.setUpdatedTimestamp(java.time.LocalDateTime.now());
 
             // Save to repository
-            userRepository.save(user);
+            userDAO.createUser(user);
 
             return new UserResponse(user);
         } catch (Exception e) {
@@ -115,7 +108,7 @@ public class UserService extends AbstractService {
             userValidation.validateUserAuthenticated();
             userValidation.validateRequesterCanAccessUser(userId);
 
-            UserEntity user = userRepository.findById(userId);
+            UserEntity user = userDAO.getUser(userId);
             userValidation.validateUserExists(user);
 
             return new UserResponse(user);
@@ -132,7 +125,7 @@ public class UserService extends AbstractService {
             userValidation.validateUserAuthenticated();
             userValidation.validateRequesterCanAccessUser(userId);
 
-            UserEntity user = userRepository.findById(userId);
+            UserEntity user = userDAO.getUser(userId);
             userValidation.validateUserExists(user);
 
             if (updateUserRequest.getName() != null && !updateUserRequest.getName().equals(user.getName())) {
@@ -154,7 +147,7 @@ public class UserService extends AbstractService {
                 user.setEmail(updateUserRequest.getEmail());
             }
 
-            userRepository.updateUserById(userId, user);
+            userDAO.updateUser(user);
 
             return new UserResponse(user);
 
@@ -170,10 +163,10 @@ public class UserService extends AbstractService {
             userValidation.validateUserAuthenticated();
             userValidation.validateRequesterCanAccessUser(userId);
 
-            UserEntity user = userRepository.findById(userId);
+            UserEntity user = userDAO.getUser(userId);
             userValidation.validateUserExists(user);
 
-            userRepository.deleteById(userId);
+            userDAO.deleteUser(userId);
 
         } catch (Exception e) {
             handleException(e);

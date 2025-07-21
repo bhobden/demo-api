@@ -13,6 +13,28 @@ import com.eaglebank.api.validation.exception.CommonExceptionType;
 import com.eaglebank.api.validation.exception.HttpRuntimeException;
 import com.eaglebank.api.validation.exception.ValidationException;
 
+/**
+ * Abstract base class for service-layer classes in the EagleBank application.
+ * <p>
+ * Provides common dependencies (such as DAOs, validators, JWT utilities, and password encoder)
+ * and a unified exception handling method for use by subclasses.
+ * </p>
+ *
+ * <h3>Injected Dependencies:</h3>
+ * <ul>
+ *   <li>{@link JwtUtil} - Utility for JWT operations</li>
+ *   <li>{@link UserDAO} - Data access for user entities</li>
+ *   <li>{@link UserValidation} - Validation logic for user operations</li>
+ *   <li>{@link PasswordEncoder} - Password hashing and verification</li>
+ *   <li>{@link AccountDAO} - Data access for account entities</li>
+ *   <li>{@link AccountValidation} - Validation logic for account operations</li>
+ * </ul>
+ *
+ * <h3>Exception Handling:</h3>
+ * <ul>
+ *   <li>{@link #handleException(Exception)} - Converts and rethrows exceptions as appropriate custom types</li>
+ * </ul>
+ */
 public abstract class AbstractService {
 
     @Autowired
@@ -38,8 +60,10 @@ public abstract class AbstractService {
      * custom exceptions.
      *
      * @param e The exception to handle.
-     * @throws ValidationException or CommonException depending on the exception
-     *                             type.
+     * @throws ValidationException if the exception is a validation error.
+     * @throws CommonException if the exception is a common application error.
+     * @throws HttpRuntimeException if the exception is a generic HTTP error.
+     * @throws CommonException wrapping the original exception for unknown errors.
      */
     protected void handleException(Exception e) {
         if (e instanceof ValidationException) {

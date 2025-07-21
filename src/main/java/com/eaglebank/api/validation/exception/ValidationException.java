@@ -1,8 +1,20 @@
 package com.eaglebank.api.validation.exception;
 
+/**
+ * Exception thrown when a validation check fails.
+ * <p>
+ * Wraps a {@link ValidationExceptionType} to provide a standardized message and status code
+ * for validation errors. This exception should be thrown by validation logic when user input
+ * or business rules are violated.
+ * </p>
+ */
 public class ValidationException extends HttpRuntimeException {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * The type of validation exception, containing error message and status code.
+     */
     private final ValidationExceptionType type;
 
     /**
@@ -26,8 +38,12 @@ public class ValidationException extends HttpRuntimeException {
         this.type = type;
     }
 
+    /**
+     * Returns the {@link ValidationExceptionType} associated with this exception.
+     *
+     * @return the validation exception type
+     */
     public ValidationExceptionType getType() {
         return this.type;
-   }
-
+    }
 }

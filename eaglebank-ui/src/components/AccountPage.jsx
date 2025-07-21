@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
 import { getAccount } from '../api';
 import { useEffect, useState } from 'react';
+import Menu from './Menu';
 
 export default function AccountPage() {
   const { accountId } = useParams();
@@ -17,6 +18,7 @@ export default function AccountPage() {
   return (
     <div>
       <h2>Account Info</h2>
+      <Menu />
       {account ? <pre>{JSON.stringify(account, null, 2)}</pre> : <p>Loading...</p>}
     </div>
   );

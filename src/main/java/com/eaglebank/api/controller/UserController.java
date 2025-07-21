@@ -35,7 +35,7 @@ public class UserController {
      * @param updateUserRequest the request body with updated fields
      * @return UserResponse with updated user details
      */
-    @PutMapping
+    @PatchMapping
     public ResponseEntity<UserResponse> updateUserById(
             @PathVariable("userId") String userId,
             @RequestBody UpdateUserRequest updateUserRequest,

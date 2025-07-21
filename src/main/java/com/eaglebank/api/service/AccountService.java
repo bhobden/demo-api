@@ -19,9 +19,21 @@ import java.util.List;
 
 /**
  * Service class for managing bank accounts.
- * Provides methods for creating, listing, fetching, updating, and deleting
- * accounts,
- * with metrics and validation for each operation.
+ * <p>
+ * Provides methods for creating, listing, fetching, updating, and deleting accounts,
+ * with metrics and validation for each operation. All methods ensure the authenticated
+ * user is authorized to perform the requested operation.
+ * </p>
+ *
+ * <h3>Key Methods:</h3>
+ * <ul>
+ *   <li>{@link #createAccount(CreateBankAccountRequest)} - Create a new account for the authenticated user</li>
+ *   <li>{@link #createAccountForUser(CreateBankAccountRequest, String)} - Create a new account for a specific user</li>
+ *   <li>{@link #listAccounts()} - List all accounts for the authenticated user</li>
+ *   <li>{@link #getAccount(String)} - Fetch a specific account for the authenticated user</li>
+ *   <li>{@link #updateAccount(String, UpdateBankAccountRequest)} - Update an account for the authenticated user</li>
+ *   <li>{@link #deleteAccount(String)} - Delete an account for the authenticated user</li>
+ * </ul>
  */
 @Service
 public class AccountService extends AbstractService {
@@ -42,6 +54,13 @@ public class AccountService extends AbstractService {
         }
     }
 
+    /**
+     * Creates a new bank account for a specific user.
+     *
+     * @param request The request containing account details.
+     * @param userId  The ID of the user who will own the account.
+     * @return BankAccountResponse containing the created account's details.
+     */
     public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {
         BankAccountEntity account = new BankAccountEntity()
                 .setAccountNumber(IdGenerator.generateAccountNumber())
@@ -65,14 +84,12 @@ public class AccountService extends AbstractService {
      */
     public ListBankAccountsResponse listAccounts() {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.list.duration")) {
-
             userValidation.validateUserAuthenticated();
 
             List<BankAccountEntity> accounts = accountDAO.getUsersAccount(AuthUtils.getUsername());
-            List<BankAccountResponse> responseList = accounts.stream().map(account -> {
-                BankAccountResponse r = buildBankAccountResponse(account);
-                return r;
-            }).toList();
+            List<BankAccountResponse> responseList = accounts.stream()
+                    .map(this::buildBankAccountResponse)
+                    .toList();
 
             return new ListBankAccountsResponse().setAccounts(responseList);
         } catch (Exception e) {
@@ -108,11 +125,9 @@ public class AccountService extends AbstractService {
      */
     public void deleteAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.delete.duration")) {
-
             userValidation.validateUserAuthenticated();
 
             BankAccountEntity account = accountDAO.getAccount(accountNumber);
-
             accountValidation.validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
 
             accountDAO.deleteBankAccount(account);
@@ -129,11 +144,9 @@ public class AccountService extends AbstractService {
      */
     public BankAccountResponse getAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.fetch.duration")) {
-
             userValidation.validateUserAuthenticated();
 
             BankAccountEntity account = accountDAO.getAccount(accountNumber);
-
             accountValidation.validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
 
             return buildBankAccountResponse(account);

@@ -1,8 +1,10 @@
-import { useState } from "react";
 import { useParams } from 'react-router-dom';
-import { createUser } from "../api";
+import { updateUser } from "../api";
 import { useAuth } from '../AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getUser } from '../api';
+import Menu from './Menu';
 
 export default function UpdateUserForm() {
     const { userId } = useParams();
@@ -26,7 +28,7 @@ export default function UpdateUserForm() {
             postcode: ""
         }
     });
-ß
+
     useEffect(() => {
         if (jwt) {
             getUser(userId, jwt).then(setDbUser);
@@ -66,11 +68,10 @@ export default function UpdateUserForm() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        const result = await createUser(form);
-        console.log("Created user:", result);
+        const result = await updateUser(userId, form, jwt);
 
         if (result?.id) {
-            navigate("/", { state: { prefillUsername: result.id } });
+            navigate("/user/" + result.id);
         } else {
             setError(result);
         }
@@ -83,7 +84,8 @@ export default function UpdateUserForm() {
                     <strong>Error:</strong> {JSON.stringify(error, null, 2)}
                 </div>
             )}
-            <h2>Create New User</h2>
+            <h2>Update User {userId}</h2>
+            <Menu />
             <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
             <input name="email" placeholder="Email" value={form.email} onChange={handleChange} />
             <input name="phoneNumber" placeholder="Phone Number" value={form.phoneNumber} onChange={handleChange} />
@@ -99,7 +101,7 @@ export default function UpdateUserForm() {
                 <input name="address.postcode" placeholder="Postcode" value={form.address.postcode} onChange={handleChange} />
             </fieldset>
 
-            <button type="submit">Create User</button>
+            <button type="submit">Update User</button>
         </form>
     );
 }

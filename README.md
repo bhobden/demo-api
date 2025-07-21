@@ -1,35 +1,230 @@
-# EagleBank JWT Login API
+# EagleBank API
 
-A Spring Boot 3.x application with modular design and secure JWT-based authentication.  
-Supports H2 in-memory for testing and MySQL via profile.
+A secure, modular Spring Boot 3.x REST API for user and bank account management, featuring JWT authentication, validation, and metrics.  
+Supports H2 (in-memory, default) and MySQL (via profile) for persistence.  
+Includes a React-based UI in `/eaglebank-ui`.
 
 ---
 
-## 🛠 Technologies
+## Technologies
+
 - Java 21
 - Spring Boot 3.x
-- Maven
 - Spring Security + JWT
 - H2 (default) / MySQL (optional)
-- Docker-ready design
+- Maven
+- Docker-ready
+- Micrometer metrics
+- React (UI, see `/eaglebank-ui`)
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 🔧 Prerequisites
-- JDK 21
-- Maven
-- Docker (optional)
+### Prerequisites
 
-### 📦 Run Locally (H2)
+- **Java 21**  
+  [Download & install JDK 21](https://adoptium.net/temurin/releases/?version=21)
+- **Maven**  
+  [Download & install Maven](https://maven.apache.org/install.html)
+
+---
+
+### Run Locally (H2, default)
+
 ```bash
 mvn spring-boot:run
+```
 
-curl -X POST http://localhost:8080/v1/login \
--H "Content-Type: application/json" \
--d '{"username": "admin", "password": "password"}'
+- The API will start on [http://localhost:8080](http://localhost:8080)
+- H2 Console: [http://localhost:8080/h2-console](http://localhost:8080/h2-console)  
+  (JDBC URL: `jdbc:h2:mem:eaglebank`)
 
-curl --verbose -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c3ItYXBrczd0ZkMiLCJpc3MiOiJlYWdsZWJhbmstYXV0aCIsImF1ZCI6ImVhZ2xlYmFuay1hcGkiLCJpYXQiOjE3NTI3ODQ2OTQsImV4cCI6MTc1Mjc4NDk5NH0.KPq98T1OfXBRjYE8oo1-sx2jzJL_81uHL_W9nDqAjaaDTPIASGeHrsTlxJIMhcPmWdqblvXPfgYrDiDxxy3zZb9IDQmlFXRMZ64Yb0aKpxQZlI-tOs-N1EE1930L-wzJxvR5Ir77ieTBwVxtnXg1TrM8UebKH4506_6Ln3gjstsovkxoLknuIICFOJR-nZb5yOS6LTDTbys_v0hdsWH6VGOz7Zrd_Gn2jqJGjiK7fxpknjbrkuOTasSkqw_kePjA6gwmIwO98Jgv6yiBPIF_FWzT0LEljhRl45tBw-xefUQZupU4ECCdWhGTgDk89PiaplW2lyw7y8mxYRdhEC81qA" http://localhost:8080/v1/users  
+---
 
-curl --verbose -H "Authorization: Bearer eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJ1c3ItQ3ZCaHBrMkkiLCJpc3MiOiJlYWdsZWJhbmstYXV0aCIsImF1ZCI6ImVhZ2xlYmFuay1hcGkiLCJpYXQiOjE3NTMxMTAxNjIsImV4cCI6MTc1MzExMDQ2Mn0.NizWT9YuJ7KFz_paMf3Myvc3FEs_GFV-LQMVidhl76iJYG0r3aRUe0LXSUhdz_ymiEWzk0hXMi2hYLw1vII63pD69HfnHTmQ_jPS4FFlvsiTGBwEUFu344kAD-mpw6fxAkRp2aeRRUNqYxqx8iEWFHrQ9HJqL530Sze1FMnL-lIcseMdu1QrNNxLT0St2YsaMDcnaypI7rey9Ur-2qcJkRSVwedSGa9cShQKC8F4FhPHmeYkLy8SApmBbv4xyaVvsUZdMwUV-VLXA9PK94kz99YUghh_S7P6_gXM239MyF_EX9UeAmTiuiCCYE2xL5IVuhgXwtLEjiaQGa4pL-KOpg" http://localhost:8080/v1/users/usr-CvBhpk2I
+### Run the React UI
+
+```bash
+cd eaglebank-ui
+npm install
+npm run dev
+```
+- UI will be available at [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Authentication
+
+- All protected endpoints require a JWT in the `Authorization: Bearer <token>` header.
+- Obtain a JWT via `/api/auth/login` (see below).
+
+---
+
+## API Endpoints & Example Usage
+
+### 1. **Register a User**
+
+```bash
+curl -X POST http://localhost:8080/api/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alice Example",
+    "email": "alice@example.com",
+    "phoneNumber": "+441234567890",
+    "password": "password123",
+    "address": {
+      "line1": "123 Main St",
+      "town": "London",
+      "county": "Greater London",
+      "postcode": "E1 6AN"
+    }
+  }'
+```
+
+---
+
+### 2. **Login (Get JWT Token)**
+
+```bash
+curl -X POST http://localhost:8080/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"username": "usr-abc123", "password": "password123"}'
+```
+- Response: `{ "jwt": "<token>" }`
+
+---
+
+### 3. **Get User Details**
+
+```bash
+curl -X GET http://localhost:8080/api/users/{userId} \
+  -H "Authorization: Bearer <token>"
+```
+
+---
+
+### 4. **Update User**
+
+```bash
+curl -X PUT http://localhost:8080/api/users/{userId} \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Alice Updated",
+    "email": "alice@newmail.com",
+    "phoneNumber": "+441234567891",
+    "password": "newpassword",
+    "address": {
+      "line1": "456 New St",
+      "town": "London",
+      "county": "Greater London",
+      "postcode": "E1 7AN"
+    }
+  }'
+```
+
+---
+
+### 5. **Delete User**
+
+```bash
+curl -X DELETE http://localhost:8080/api/users/{userId} \
+  -H "Authorization: Bearer <token>"
+```
+
+---
+
+### 6. **Create Bank Account**
+
+```bash
+curl -X POST http://localhost:8080/api/accounts \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accountName": "Savings Account",
+    "accountType": "SAVINGS"
+  }'
+```
+
+---
+
+### 7. **List User Accounts**
+
+```bash
+curl -X GET http://localhost:8080/api/accounts \
+  -H "Authorization: Bearer <token>"
+```
+
+---
+
+### 8. **Get Account Details**
+
+```bash
+curl -X GET http://localhost:8080/api/accounts/{accountNumber} \
+  -H "Authorization: Bearer <token>"
+```
+
+---
+
+### 9. **Update Account**
+
+```bash
+curl -X PUT http://localhost:8080/api/accounts/{accountNumber} \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "accountName": "Holiday Fund",
+    "accountType": "PERSONAL"
+  }'
+```
+
+---
+
+### 10. **Delete Account**
+
+```bash
+curl -X DELETE http://localhost:8080/api/accounts/{accountNumber} \
+  -H "Authorization: Bearer <token>"
+```
+
+---
+
+## Testing
+
+- Run all tests:
+  ```bash
+  mvn test
+  ```
+
+---
+
+## Notes
+
+- Default admin/test user may be created at startup (see `EagleBankApp.java`).
+- All timestamps are stored in UTC.
+- For more details, see Javadoc comments in the source code.
+
+---
+
+## Troubleshooting
+
+- **Port in use?**  
+  Change the port in `src/main/resources/application.properties`.
+- **MySQL connection issues?**  
+  Ensure Docker MySQL is running and credentials match your config.
+- **JWT errors?**  
+  Make sure you include the `Authorization: Bearer <token>` header.
+
+---
+
+## Project Structure
+
+```
+api/
+  ├── src/main/java/com/eaglebank/api/
+  ├── src/main/resources/
+  ├── eaglebank-ui/           # React UI
+  └── README.md
+```
+
+---

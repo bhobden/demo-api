@@ -13,13 +13,26 @@ import com.eaglebank.api.validation.exception.ValidationExceptionType;
 
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 /**
- * Service class responsible for user-related business logic, including
- * authentication,
- * user creation, and user retrieval. Handles validation, password encoding, and
- * JWT generation.
+ * Service class responsible for user-related business logic, including authentication,
+ * user creation, retrieval, update, and deletion. Handles validation, password encoding,
+ * and JWT generation.
+ * <p>
+ * All methods are wrapped with metrics and validation to ensure secure and observable
+ * user operations.
+ * </p>
+ *
+ * <h3>Key Methods:</h3>
+ * <ul>
+ *   <li>{@link #getJWTToken(LoginRequest)} - Authenticate and generate JWT token</li>
+ *   <li>{@link #createUser(CreateUserRequest)} - Create a new user</li>
+ *   <li>{@link #getUserById(String)} - Retrieve a user by ID</li>
+ *   <li>{@link #updateUser(String, UpdateUserRequest)} - Update user details</li>
+ *   <li>{@link #deleteUser(String)} - Delete a user by ID</li>
+ * </ul>
  */
 @Service
 public class UserService extends AbstractService {
@@ -28,7 +41,7 @@ public class UserService extends AbstractService {
      * Authenticates a user and generates a JWT token if credentials are valid.
      *
      * @param request LoginRequest containing username and password.
-     * @return ResponseEntity with JWT token if authentication is successful.
+     * @return A map containing the JWT token if authentication is successful.
      * @throws ValidationException if credentials are invalid.
      */
     public Object getJWTToken(LoginRequest request) {
@@ -59,7 +72,7 @@ public class UserService extends AbstractService {
      *
      * @param newUser The user creation request containing all user details.
      * @return UserResponse containing the created user's details.
-     * @throws ValidationException if the user ID already exists.
+     * @throws ValidationException if the user ID already exists or validation fails.
      */
     public UserResponse createUser(CreateUserRequest newUser) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.create.duration")) {
@@ -68,6 +81,9 @@ public class UserService extends AbstractService {
             if (userDAO.getUser(newId) != null) {
                 throw new ValidationException(ValidationExceptionType.ID_ALREADY_EXISTS);
             }
+
+            // Validate user details
+            userValidation.validateNewUser(newUser);
 
             // Create new user and copy all fields from CreateUserRequest
             UserEntity user = new UserEntity();
@@ -92,12 +108,9 @@ public class UserService extends AbstractService {
     }
 
     /**
-     * Retrieves a user by ID, ensuring the authenticated user matches the requested
-     * user ID.
+     * Retrieves a user by ID, ensuring the authenticated user matches the requested user ID.
      *
-     * @param authentication The authentication object representing the current
-     *                       user.
-     * @param userId         The ID of the user to retrieve.
+     * @param userId The ID of the user to retrieve.
      * @return UserResponse containing the user's details.
      * @throws ValidationException if the user is unauthorized or not found.
      */
@@ -118,6 +131,14 @@ public class UserService extends AbstractService {
         }
     }
 
+    /**
+     * Updates an existing user's details.
+     *
+     * @param userId            The ID of the user to update.
+     * @param updateUserRequest The request containing updated user fields.
+     * @return UserResponse containing the updated user's details.
+     * @throws ValidationException if validation fails or user is not found.
+     */
     public UserResponse updateUser(String userId, UpdateUserRequest updateUserRequest) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.update.duration")) {
 
@@ -145,6 +166,11 @@ public class UserService extends AbstractService {
                 userValidation.validateEmail(updateUserRequest.getEmail());
                 user.setEmail(updateUserRequest.getEmail());
             }
+            if (StringUtils.isNotBlank(updateUserRequest.getPassword())
+                    && !passwordEncoder.matches(updateUserRequest.getPassword(), user.getPassword())) {
+                userValidation.validatePassword(updateUserRequest.getPassword());
+                user.setPassword(passwordEncoder.encode(updateUserRequest.getPassword()));
+            }
 
             userDAO.updateUser(user);
 
@@ -156,6 +182,12 @@ public class UserService extends AbstractService {
         }
     }
 
+    /**
+     * Deletes a user by ID.
+     *
+     * @param userId The ID of the user to delete.
+     * @throws ValidationException if the user is unauthorized or not found.
+     */
     public void deleteUser(String userId) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.delete.duration")) {
 

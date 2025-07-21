@@ -37,8 +37,8 @@ export async function deleteUser(userId, jwt) {
     method: "DELETE",
     headers: { Authorization: `Bearer ${jwt}` }
   });
-  return response.json();
-} 
+  return response.status === 204 ? null : response.json();
+}
 
 export async function getAccounts(jwt) {
   const response = await fetch(`http://localhost:5173/v1/accounts`, {
@@ -65,3 +65,23 @@ export async function createAccount(accountData, jwt) {
   });
   return response.json();
 }
+
+export async function updateAccount(accountId, accountData, jwt) {
+  const response = await fetch(`http://localhost:5173/v1/accounts/${accountId}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${jwt}`
+    },
+    body: JSON.stringify(accountData),
+  });
+  return response.json();
+}
+
+export async function deleteAccount(accountId, jwt) {
+  const response = await fetch(`http://localhost:5173/v1/accounts/${accountId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${jwt}` }
+  });
+  return response.status === 204 ? null : response.json();
+} 

@@ -1,17 +1,15 @@
 package com.eaglebank.api.service;
 
-import com.eaglebank.api.dao.AccountDAO;
 import com.eaglebank.api.metrics.MetricScope;
 import com.eaglebank.api.metrics.MetricScopeFactory;
 import com.eaglebank.api.model.BankAccountEntity;
+import com.eaglebank.api.model.BankAccountEntity.Currency;
 import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.request.UpdateBankAccountRequest;
 import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.model.dto.response.ListBankAccountsResponse;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.security.IdGenerator;
-import com.eaglebank.api.validation.AccountValidation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -19,40 +17,51 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
+/**
+ * Service class for managing bank accounts.
+ * Provides methods for creating, listing, fetching, updating, and deleting
+ * accounts,
+ * with metrics and validation for each operation.
+ */
 @Service
 public class AccountService extends AbstractService {
 
-    @Autowired
-    private AccountDAO accountDAO;
-
-    @Autowired
-    private AccountValidation accountValidation;
-
     /**
      * Creates a new bank account for the authenticated user.
+     *
+     * @param request The request containing account details.
+     * @return BankAccountResponse containing the created account's details.
      */
     public BankAccountResponse createAccount(CreateBankAccountRequest request) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.create.duration")) {
-
             userValidation.validateUserAuthenticated();
-
-            BankAccountEntity account = new BankAccountEntity()
-                    .setAccountNumber(IdGenerator.generateAccountNumber())
-                    .setSortCode(IdGenerator.generateSortCode())
-                    .setAccountName(request.getAccountName())
-                    .setAccountType(request.getAccountType())
-                    .setBalance(0.0)
-                    .setCreatedTimestamp(Instant.now())
-                    .setUpdatedTimestamp(Instant.now())
-                    .setOwnerUsername(AuthUtils.getUsername());
-            account = accountDAO.createBankAccount(account);
-
-            return buildBankAccountResponse(account);
+            return createAccountForUser(request, AuthUtils.getUsername());
+        } catch (Exception e) {
+            handleException(e);
+            return null; // Unreachable, but required for compilation
         }
+    }
+
+    public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {
+        BankAccountEntity account = new BankAccountEntity()
+                .setAccountNumber(IdGenerator.generateAccountNumber())
+                .setSortCode(IdGenerator.generateSortCode())
+                .setAccountName(request.getAccountName())
+                .setAccountType(request.getAccountType())
+                .setCurrency(Currency.GBP)
+                .setBalance(0.0)
+                .setCreatedTimestamp(Instant.now())
+                .setUpdatedTimestamp(Instant.now())
+                .setOwnerUsername(userId);
+        account = accountDAO.createBankAccount(account);
+
+        return buildBankAccountResponse(account);
     }
 
     /**
      * Lists all bank accounts for the authenticated user.
+     *
+     * @return ListBankAccountsResponse containing all accounts for the user.
      */
     public ListBankAccountsResponse listAccounts() {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.list.duration")) {
@@ -66,9 +75,18 @@ public class AccountService extends AbstractService {
             }).toList();
 
             return new ListBankAccountsResponse().setAccounts(responseList);
+        } catch (Exception e) {
+            handleException(e);
+            return null; // Unreachable, but required for compilation
         }
     }
 
+    /**
+     * Helper method to build a BankAccountResponse from a BankAccountEntity.
+     *
+     * @param account The BankAccountEntity to convert.
+     * @return BankAccountResponse with mapped fields.
+     */
     private BankAccountResponse buildBankAccountResponse(BankAccountEntity account) {
         BankAccountResponse response = new BankAccountResponse();
         response.setAccountNumber(account.getAccountNumber());
@@ -85,6 +103,8 @@ public class AccountService extends AbstractService {
 
     /**
      * Deletes a bank account by account number for the authenticated user.
+     *
+     * @param accountNumber The account number to delete.
      */
     public void deleteAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.delete.duration")) {
@@ -103,6 +123,9 @@ public class AccountService extends AbstractService {
 
     /**
      * Fetches a bank account by account number for the authenticated user.
+     *
+     * @param accountNumber The account number to fetch.
+     * @return BankAccountResponse containing the account's details.
      */
     public BankAccountResponse getAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.fetch.duration")) {
@@ -122,6 +145,10 @@ public class AccountService extends AbstractService {
 
     /**
      * Updates a bank account by account number for the authenticated user.
+     *
+     * @param accountNumber The account number to update.
+     * @param updateRequest The request containing updated account fields.
+     * @return BankAccountResponse with updated account details.
      */
     public BankAccountResponse updateAccount(String accountNumber,
             UpdateBankAccountRequest updateRequest) {
@@ -150,6 +177,9 @@ public class AccountService extends AbstractService {
 
     /**
      * Converts an Instant to LocalDateTime in UTC, handling nulls safely.
+     *
+     * @param instant The Instant to convert.
+     * @return LocalDateTime in UTC, or null if instant is null.
      */
     private LocalDateTime convertInstantToLocalDateTimeUTC(Instant instant) {
         if (instant == null) {

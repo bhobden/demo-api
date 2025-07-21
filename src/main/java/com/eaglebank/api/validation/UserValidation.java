@@ -99,7 +99,8 @@ public class UserValidation extends AbstractValidation {
      * Validates that the current user is authenticated.
      */
     public void validateUserAuthenticated() {
-        if (AuthUtils.isAuthenticated()) {
+        System.out.println("Validating user authentication status..." + AuthUtils.isAuthenticated() );
+        if (!AuthUtils.isAuthenticated()) {
             invalid(ValidationExceptionType.AUTH_UNAUTHORIZED);
         }
     }

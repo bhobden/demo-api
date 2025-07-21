@@ -17,20 +17,6 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), ex.getStatusCode());
     }
 
-    /** 
-    @ExceptionHandler(CommonException.class)
-    public ResponseEntity<ErrorResponse> handleAccountNotFound(CommonException ex,
-            HttpServletRequest request) {
-        return buildErrorResponse(ex.getMessage(), ex.getStatusCode());
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorResponse> handleAccountNotFound(ValidationException ex,
-            HttpServletRequest request) {
-        return buildErrorResponse(ex.getMessage(), ex.getStatusCode());
-    }
-*/
-
 @   ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleGeneric(NoResourceFoundException ex,
             HttpServletRequest request) {

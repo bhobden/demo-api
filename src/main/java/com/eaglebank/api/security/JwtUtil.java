@@ -55,7 +55,7 @@ public class JwtUtil {
                 .setAudience("eaglebank-api")
                 .setIssuedAt(new Date())
                 .setExpiration(Date.from(LocalDateTime.now()
-                        .plusMinutes(5) // Token validity period
+                        .plusMinutes(50) // Token validity period
                         .atZone(ZoneId.systemDefault())
                         .toInstant()))
                 .signWith(PRIVATE_SECRET, SignatureAlgorithm.RS256)
@@ -72,6 +72,7 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
         } catch (Exception e) {
+            System.out.println("Invalid JWT token: " + e.getMessage());
             throw new CommonException(CommonExceptionType.INVALID_JWT); 
         }
     }

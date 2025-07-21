@@ -13,7 +13,6 @@ import com.eaglebank.api.validation.exception.ValidationExceptionType;
 
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 /**
@@ -47,7 +46,7 @@ public class UserService extends AbstractService {
             String token = jwtUtil.generateToken(request.getUsername());
 
             // Also return token in JSON body
-            return ResponseEntity.ok(Map.of("jwt", token));
+            return Map.of("jwt", token);
 
         } catch (Exception e) {
             handleException(e);

@@ -3,6 +3,7 @@ package com.eaglebank.api.config;
 import com.eaglebank.api.security.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +35,9 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable()) // Disable CSRF protection for stateless APIs
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/v1/login","/actuator/**").permitAll() // Allow public access to login
+                .requestMatchers(HttpMethod.POST, "/v1/users", "/v1/login").permitAll() 
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow public access to options
+                .requestMatchers("/actuator/**").permitAll() // Allow public access to login
                 .anyRequest().authenticated()              // Require auth for other routes
             )
             .sessionManagement(sess -> sess

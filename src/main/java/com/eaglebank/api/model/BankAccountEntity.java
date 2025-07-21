@@ -36,6 +36,7 @@ public class BankAccountEntity {
     @Column(nullable = false)
     private Double balance;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 3)
     private Currency currency;
 

@@ -19,7 +19,8 @@ import java.io.IOException;
 /**
  * Filter that intercepts HTTP requests to validate JWT tokens.
  * If a valid token is present, sets authentication context for the request.
- * Handles JWT errors by returning a JSON error response with appropriate status code.
+ * Handles JWT errors by returning a JSON error response with appropriate status
+ * code.
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
@@ -31,16 +32,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * Intercepts each HTTP request, extracts and validates JWT token.
      * Sets authentication if token is valid, otherwise handles errors.
      *
-     * @param request      The incoming HTTP request.
-     * @param response     The outgoing HTTP response.
-     * @param filterChain  The filter chain to continue processing.
+     * @param request     The incoming HTTP request.
+     * @param response    The outgoing HTTP response.
+     * @param filterChain The filter chain to continue processing.
      * @throws ServletException
      * @throws IOException
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+            HttpServletResponse response,
+            FilterChain filterChain) throws ServletException, IOException {
 
         try {
             String token = extractToken(request);
@@ -75,7 +76,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Handles JWT errors by writing a JSON error response with the appropriate status code.
+     * Handles JWT errors by writing a JSON error response with the appropriate
+     * status code.
      *
      * @param response The HTTP response.
      * @param ex       The exception that occurred.
@@ -83,8 +85,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      * @throws IOException If writing to the response fails.
      */
     private void handleJwtError(HttpServletResponse response,
-                                CommonException ex,
-                                String path) throws IOException {
+            CommonException ex,
+            String path) throws IOException {
 
         ErrorResponse error = new ErrorResponse().setMessage(ex.getMessage());
 

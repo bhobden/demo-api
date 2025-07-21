@@ -1,7 +1,11 @@
 package com.eaglebank.api.security;
 
+import java.util.List;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +40,9 @@ public class AuthUtils {
     }
 
     public static void createAuthentication(String username) {
-        Authentication auth = new UsernamePasswordAuthenticationToken(username, null);
+        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
         SecurityContextHolder.getContext().setAuthentication(auth);
     }   
 }

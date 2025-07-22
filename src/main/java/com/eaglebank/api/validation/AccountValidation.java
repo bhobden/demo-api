@@ -2,7 +2,7 @@ package com.eaglebank.api.validation;
 
 import org.springframework.stereotype.Component;
 
-import com.eaglebank.api.model.BankAccountEntity;
+import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
 

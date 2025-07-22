@@ -3,7 +3,7 @@ package com.eaglebank.api.dao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.eaglebank.api.model.user.UserEntity;
+import com.eaglebank.api.model.entity.user.UserEntity;
 import com.eaglebank.api.repository.UserRepository;
 
 /**

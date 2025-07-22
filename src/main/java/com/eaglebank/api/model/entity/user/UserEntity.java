@@ -1,4 +1,4 @@
-package com.eaglebank.api.model.user;
+package com.eaglebank.api.model.entity.user;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -6,7 +6,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.eaglebank.api.model.address.Address;
+
+import com.eaglebank.api.model.entity.user.address.Address;
 
 @Entity
 @Table(name = "users") // Explicit table naming for clarity and compatibility

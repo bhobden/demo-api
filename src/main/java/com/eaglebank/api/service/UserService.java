@@ -6,7 +6,7 @@ import com.eaglebank.api.model.dto.request.CreateUserRequest;
 import com.eaglebank.api.model.dto.request.LoginRequest;
 import com.eaglebank.api.model.dto.request.UpdateUserRequest;
 import com.eaglebank.api.model.dto.response.UserResponse;
-import com.eaglebank.api.model.user.UserEntity;
+import com.eaglebank.api.model.entity.user.UserEntity;
 import com.eaglebank.api.security.IdGenerator;
 import com.eaglebank.api.validation.exception.ValidationException;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;

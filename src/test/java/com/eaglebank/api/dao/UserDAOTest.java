@@ -1,6 +1,6 @@
 package com.eaglebank.api.dao;
 
-import com.eaglebank.api.model.user.UserEntity;
+import com.eaglebank.api.model.entity.user.UserEntity;
 import com.eaglebank.api.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

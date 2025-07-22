@@ -2,19 +2,17 @@ package com.eaglebank.api.service;
 
 import com.eaglebank.api.metrics.MetricScope;
 import com.eaglebank.api.metrics.MetricScopeFactory;
-import com.eaglebank.api.model.BankAccountEntity;
-import com.eaglebank.api.model.BankAccountEntity.Currency;
 import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.request.UpdateBankAccountRequest;
 import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.model.dto.response.ListBankAccountsResponse;
+import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
+import com.eaglebank.api.model.entity.bankaccount.Currency;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.security.IdGenerator;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -186,18 +184,5 @@ public class AccountService extends AbstractService {
             handleException(e);
             return null; // Unreachable, but required for compilation
         }
-    }
-
-    /**
-     * Converts an Instant to LocalDateTime in UTC, handling nulls safely.
-     *
-     * @param instant The Instant to convert.
-     * @return LocalDateTime in UTC, or null if instant is null.
-     */
-    private LocalDateTime convertInstantToLocalDateTimeUTC(Instant instant) {
-        if (instant == null) {
-            return null;
-        }
-        return LocalDateTime.ofInstant(instant, ZoneId.of("UTC"));
     }
 }

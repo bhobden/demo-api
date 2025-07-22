@@ -1,9 +1,13 @@
 package com.eaglebank.api.model.dto.request;
 
+import com.eaglebank.api.model.entity.bankaccount.AccountType;
+import com.eaglebank.api.model.entity.bankaccount.Currency;
+import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
+
 public class CreateTransactionRequest {
     private double amount;
-    private String currency;
-    private String type;
+    private Currency currency;
+    private TransactionType type;
     private String reference;
 
     public double getAmount() {
@@ -14,19 +18,19 @@ public class CreateTransactionRequest {
         this.amount = amount;
     }
 
-    public String getCurrency() {
+    public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(String currency) {
+    public void setCurrency(Currency currency) {
         this.currency = currency;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(TransactionType type) {
         this.type = type;
     }
 

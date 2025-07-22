@@ -1,11 +1,10 @@
 package com.eaglebank.api;
 
-import com.eaglebank.api.model.BankAccountEntity.AccountType;
-import com.eaglebank.api.model.address.Address;
 import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
-import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.model.dto.response.UserResponse;
+import com.eaglebank.api.model.entity.bankaccount.AccountType;
+import com.eaglebank.api.model.entity.user.address.Address;
 import com.eaglebank.api.service.AccountService;
 import com.eaglebank.api.service.UserService;
 

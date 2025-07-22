@@ -9,7 +9,8 @@ import java.util.stream.IntStream;
  * Ensures generated values match required formats for EagleBank entities.
  */
 public class IdGenerator {
-    private static final String PREFIX = "usr-";
+    private static final String USER_PREFIX = "usr-";
+    private static final String TRANSACTION_PREFIX = "tan-";
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int DEFAULT_LENGTH = 8; // Length of random part for user ID
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -19,10 +20,14 @@ public class IdGenerator {
      * @return A random user ID string, e.g. usr-Ab12CdEf
      */
     public static String generateUserId() {
+        return generatePrefixId(USER_PREFIX);
+    }
+
+    public static String generatePrefixId(String prefix) {
         String randomPart = IntStream.range(0, DEFAULT_LENGTH)
                 .mapToObj(i -> String.valueOf(CHARACTERS.charAt(RANDOM.nextInt(CHARACTERS.length()))))
                 .collect(Collectors.joining());
-        return PREFIX + randomPart;
+        return prefix + randomPart;
     }
 
     /**
@@ -31,6 +36,15 @@ public class IdGenerator {
      */
     public static String generateAccountNumber() {
         return String.format("01%06d", RANDOM.nextInt(1_000_000));
+    }
+
+    /**
+     * Generates a unique transaction ID (e.g., tan-abc123).
+     * 
+     * @return a unique transaction ID
+     */
+    public static String generateTransactionId() {
+        return generatePrefixId(TRANSACTION_PREFIX);
     }
 
     /**

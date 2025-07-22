@@ -1,29 +1,59 @@
-package com.eaglebank.api.model.dto.response;
+package com.eaglebank.api.model.entity.bankaccount.transaction;
 
-import java.time.LocalDateTime;
+import jakarta.persistence.*;
+
+import java.time.Instant;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.eaglebank.api.model.entity.bankaccount.Currency;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
 
 /**
- * DTO representing a transaction response.
+ * Entity representing a bank account transaction.
  * <p>
- * Contains details about a transaction, such as amount, currency, type, reference,
- * associated user, and timestamps.
+ * Contains details such as transaction ID, amount, currency, type, reference, user ID, account number, and creation timestamp.
  * </p>
  */
-public class TransactionResponse {
+@Entity
+@Table(name = "transactions")
+public class TransactionEntity {
+
+    /** Unique transaction ID (e.g., tan-123abc). */
+    @Id
+    @Column(length = 32, nullable = false, unique = true)
     private String id;
+
+    /** Transaction amount (0.00 - 10000.00). */
+    @Column(nullable = false)
     private double amount;
+
+    /** Transaction currency (e.g., GBP). */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 8)
     private Currency currency;
+
+    /** Transaction type (deposit or withdrawal). */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 16)
     private TransactionType type;
+
+    /** Optional reference or description for the transaction. */
+    @Column(length = 128)
     private String reference;
+
+    /** ID of the user associated with this transaction (e.g., usr-abc123). */
+    @Column(length = 32, nullable = false)
     private String userId;
-    private LocalDateTime createdTimestamp;
+
+    /** Account number of the bank account associated with this transaction. */
+    @Column(length = 32, nullable = false)
+    private String accountNumber;
+
+    /** Timestamp when the transaction was created. */
+    @Column(nullable = false)
+    private Instant createdTimestamp;
 
     public String getId() {
         return id;
@@ -73,19 +103,27 @@ public class TransactionResponse {
         this.userId = userId;
     }
 
-    public LocalDateTime getCreatedTimestamp() {
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+
+    public Instant getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public void setCreatedTimestamp(Instant createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof TransactionResponse)) return false;
-        TransactionResponse that = (TransactionResponse) o;
+        if (!(o instanceof TransactionEntity)) return false;
+        TransactionEntity that = (TransactionEntity) o;
         return new EqualsBuilder()
                 .append(amount, that.amount)
                 .append(id, that.id)
@@ -93,6 +131,7 @@ public class TransactionResponse {
                 .append(type, that.type)
                 .append(reference, that.reference)
                 .append(userId, that.userId)
+                .append(accountNumber, that.accountNumber)
                 .append(createdTimestamp, that.createdTimestamp)
                 .isEquals();
     }
@@ -106,6 +145,7 @@ public class TransactionResponse {
                 .append(type)
                 .append(reference)
                 .append(userId)
+                .append(accountNumber)
                 .append(createdTimestamp)
                 .toHashCode();
     }
@@ -119,6 +159,7 @@ public class TransactionResponse {
                 .append("type", type)
                 .append("reference", reference)
                 .append("userId", userId)
+                .append("accountNumber", accountNumber)
                 .append("createdTimestamp", createdTimestamp)
                 .toString();
     }

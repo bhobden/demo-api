@@ -1,10 +1,7 @@
-package com.eaglebank.api.model;
+package com.eaglebank.api.model.entity.bankaccount;
 
 import jakarta.persistence.*;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -12,9 +9,10 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * Entity representing a bank account.
+ * <p>
  * Covers all required fields: accountNumber, sortCode, name, accountType,
- * balance, currency,
- * createdTimestamp, updatedTimestamp.
+ * balance, currency, createdTimestamp, updatedTimestamp, and ownerUsername.
+ * </p>
  */
 @Entity
 public class BankAccountEntity {
@@ -148,6 +146,7 @@ public class BankAccountEntity {
                 .append(currency, that.currency)
                 .append(createdTimestamp, that.createdTimestamp)
                 .append(updatedTimestamp, that.updatedTimestamp)
+                .append(ownerUsername, that.ownerUsername)
                 .isEquals();
     }
 
@@ -162,6 +161,7 @@ public class BankAccountEntity {
                 .append(currency)
                 .append(createdTimestamp)
                 .append(updatedTimestamp)
+                .append(ownerUsername)
                 .toHashCode();
     }
 
@@ -176,41 +176,7 @@ public class BankAccountEntity {
                 .append("currency", currency)
                 .append("createdTimestamp", createdTimestamp)
                 .append("updatedTimestamp", updatedTimestamp)
+                .append("ownerUsername", ownerUsername)
                 .toString();
-    }
-
-    public enum AccountType {
-        PERSONAL(0),
-        SAVINGS(1),
-        CREDIT(2);
-
-        public static final List<AccountType> ALL = Collections.unmodifiableList(Arrays.asList(values()));
-
-        private final int value;
-
-        AccountType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
-    public enum Currency {
-        USD(0),
-        GBP(1);
-
-        public static final List<Currency> ALL = Collections.unmodifiableList(Arrays.asList(values()));
-
-        private final int value;
-
-        Currency(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
     }
 }

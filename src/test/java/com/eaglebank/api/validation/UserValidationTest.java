@@ -1,7 +1,7 @@
 package com.eaglebank.api.validation;
 
-import com.eaglebank.api.model.address.Address;
-import com.eaglebank.api.model.user.UserEntity;
+import com.eaglebank.api.model.entity.user.UserEntity;
+import com.eaglebank.api.model.entity.user.address.Address;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.validation.exception.ValidationException;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;

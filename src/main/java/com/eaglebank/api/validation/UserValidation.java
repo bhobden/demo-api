@@ -9,9 +9,9 @@ import org.springframework.util.CollectionUtils;
 
 import com.eaglebank.api.dao.AccountDAO;
 import com.eaglebank.api.dao.UserDAO;
-import com.eaglebank.api.model.address.Address;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
-import com.eaglebank.api.model.user.UserEntity;
+import com.eaglebank.api.model.entity.user.UserEntity;
+import com.eaglebank.api.model.entity.user.address.Address;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
 

@@ -1,7 +1,8 @@
 package com.eaglebank.api.repository;
 
-import com.eaglebank.api.model.BankAccountEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
 
 import java.util.List;
 

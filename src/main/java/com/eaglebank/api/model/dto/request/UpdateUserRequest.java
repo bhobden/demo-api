@@ -1,6 +1,6 @@
 package com.eaglebank.api.model.dto.request;
 
-import com.eaglebank.api.model.address.Address;
+import com.eaglebank.api.model.entity.user.address.Address;
 
 public class UpdateUserRequest {
     private String name;

@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.eaglebank.api.model.BankAccountEntity;
+import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
 import com.eaglebank.api.repository.BankAccountRepository;
 
 /**

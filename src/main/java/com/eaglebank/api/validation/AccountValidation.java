@@ -3,6 +3,8 @@ package com.eaglebank.api.validation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
+import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
+import com.eaglebank.api.model.entity.bankaccount.AccountType;
 import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
@@ -76,6 +78,29 @@ public class AccountValidation extends AbstractValidation {
     public void validateAccountName(String accountName) {
         if (StringUtils.isBlank(accountName)) {
             invalid(ValidationExceptionType.ACCOUNT_NAME_INVALID);
+        }
+    }
+
+    /**
+     * Validates all required fields for creating a new account.
+     *
+     * @param request The CreateBankAccountRequest containing account details.
+     * @throws ValidationException if any required field is invalid.
+     */
+    public void validateNewAccount(CreateBankAccountRequest request) {
+        validateAccountType(request.getAccountType());
+        validateAccountName(request.getAccountName());
+    }
+
+    /**
+     * Validates that the account type is specified.
+     *
+     * @param accountType The account type to validate.
+     * @throws ValidationException if the account type is null.
+     */
+    public void validateAccountType(AccountType accountType) {
+        if (accountType == null) {
+            invalid(ValidationExceptionType.ACCOUNT_TYPE_INVALID);
         }
     }
 }

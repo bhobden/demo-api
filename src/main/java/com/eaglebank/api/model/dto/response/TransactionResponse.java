@@ -29,56 +29,63 @@ public class TransactionResponse {
         return id;
     }
 
-    public void setId(String id) {
+    public TransactionResponse setId(String id) {
         this.id = id;
+        return this;
     }
 
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public TransactionResponse setAmount(double amount) {
         this.amount = amount;
+        return this;
     }
 
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public TransactionResponse setCurrency(Currency currency) {
         this.currency = currency;
+        return this;
     }
 
     public TransactionType getType() {
         return type;
     }
 
-    public void setType(TransactionType type) {
+    public TransactionResponse setType(TransactionType type) {
         this.type = type;
+        return this;
     }
 
     public String getReference() {
         return reference;
     }
 
-    public void setReference(String reference) {
+    public TransactionResponse setReference(String reference) {
         this.reference = reference;
+        return this;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public TransactionResponse setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
     public LocalDateTime getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public TransactionResponse setCreatedTimestamp(LocalDateTime createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
+        return this;
     }
 
     @Override

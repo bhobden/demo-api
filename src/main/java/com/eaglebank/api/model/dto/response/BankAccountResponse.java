@@ -31,64 +31,72 @@ public class BankAccountResponse {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public BankAccountResponse setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
+        return this;
     }
 
     public String getSortCode() {
         return sortCode;
     }
 
-    public void setSortCode(String sortCode) {
+    public BankAccountResponse setSortCode(String sortCode) {
         this.sortCode = sortCode;
+        return this;
     }
 
     public String getAccountName() {
         return name;
     }
 
-    public void setAccountName(String name) {
+    public BankAccountResponse setAccountName(String name) {
         this.name = name;
+        return this;
     }
 
     public AccountType getAccountType() {
         return accountType;
     }
 
-    public void setAccountType(AccountType accountType) {
+    public BankAccountResponse setAccountType(AccountType accountType) {
         this.accountType = accountType;
+        return this;
     }
 
     public double getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public BankAccountResponse setBalance(double balance) {
         this.balance = balance;
+        return this;
     }
 
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public BankAccountResponse  setCurrency(Currency currency) {
         this.currency = currency;
+        return this;
     }
 
     public LocalDateTime getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public BankAccountResponse setCreatedTimestamp(LocalDateTime createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
+        return this;
     }
 
     public LocalDateTime getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public BankAccountResponse setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
+        return this;
     }
 
     @Override

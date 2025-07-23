@@ -20,70 +20,67 @@ public class UserResponse {
     private LocalDateTime createdTimestamp;
     private LocalDateTime updatedTimestamp;
 
-    public UserResponse(UserEntity user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.address = user.getAddress();
-        this.phoneNumber = user.getPhoneNumber();
-        this.email = user.getEmail();
-        this.createdTimestamp = user.getCreatedTimestamp();
-        this.updatedTimestamp = user.getUpdatedTimestamp();
-    }
-
     public String getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public UserResponse setId(String id) {
         this.id = id;
+        return this;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public UserResponse setName(String name) {
         this.name = name;
+        return this;
     }
 
     public Address getAddress() {
         return address;
     }
 
-    public void setAddress(Address address) {
+    public UserResponse setAddress(Address address) {
         this.address = address;
+        return this;
     }
 
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
+    public UserResponse setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
     }
 
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
+    public UserResponse setEmail(String email) {
         this.email = email;
+        return this;
     }
 
     public LocalDateTime getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+    public UserResponse setCreatedTimestamp(LocalDateTime createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
+        return this;
     }
 
     public LocalDateTime getUpdatedTimestamp() {
         return updatedTimestamp;
     }
 
-    public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+    public UserResponse setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
+        return this;
     }
 
     @Override

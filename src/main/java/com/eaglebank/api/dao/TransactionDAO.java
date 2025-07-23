@@ -60,13 +60,4 @@ public class TransactionDAO {
     public List<TransactionEntity> findTransactionsByAccountId(String accountNumber) {
         return transactionRepository.findByAccountNumber(accountNumber);
     }
-
-    /**
-     * Deletes a transaction by its ID.
-     *
-     * @param id the transaction ID
-     */
-    public void deleteTransaction(String id) {
-        transactionRepository.deleteById(id);
-    }
 }

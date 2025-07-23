@@ -8,6 +8,7 @@ import com.eaglebank.api.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import static java.net.HttpURLConnection.HTTP_CREATED;
 
 /**
  * Controller for fetching lists of transactions for accounts or users.
@@ -34,6 +35,6 @@ public class TransactionsController {
             @PathVariable("accountId") String accountNumber,
             @RequestBody CreateTransactionRequest transactionRequest) {
         TransactionResponse response = transactionService.createTransaction(accountNumber, transactionRequest);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HTTP_CREATED).body(response);
     }
 }

@@ -100,7 +100,7 @@ public class UserService extends AbstractService {
             // Save to repository
             userDAO.createUser(user);
 
-            return new UserResponse(user);
+            return userResponse(user);
         } catch (Exception e) {
             handleException(e);
             return null; // Unreachable, but required for compilation
@@ -123,7 +123,7 @@ public class UserService extends AbstractService {
             UserEntity user = userDAO.getUser(userId);
             userValidation.validateUserExists(user);
 
-            return new UserResponse(user);
+            return userResponse(user);
 
         } catch (Exception e) {
             handleException(e);
@@ -174,7 +174,7 @@ public class UserService extends AbstractService {
 
             userDAO.updateUser(user);
 
-            return new UserResponse(user);
+            return userResponse(user);
 
         } catch (Exception e) {
             handleException(e);
@@ -202,5 +202,16 @@ public class UserService extends AbstractService {
         } catch (Exception e) {
             handleException(e);
         }
+    }
+
+    protected UserResponse userResponse(UserEntity user) {
+        return new UserResponse()
+                .setId(user.getId())
+                .setName(user.getName())
+                .setAddress(user.getAddress())
+                .setPhoneNumber(user.getPhoneNumber())
+                .setEmail(user.getEmail())
+                .setCreatedTimestamp(user.getCreatedTimestamp())
+                .setUpdatedTimestamp(user.getUpdatedTimestamp());
     }
 }

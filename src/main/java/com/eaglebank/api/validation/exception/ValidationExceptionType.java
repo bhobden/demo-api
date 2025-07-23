@@ -27,7 +27,8 @@ public enum ValidationExceptionType {
     TRANSACTION_NOT_FOUND("Transaction not found", HTTP_NOT_FOUND), 
     TRANSACTION_CURRENCY_INVALID("Invalid transaction currency", HTTP_BAD_REQUEST), 
     TRANSACTION_INVALID_TYPE("Invalid transaction type", HTTP_BAD_REQUEST), 
-    TRANSACTION_INVALID_REFERENCE("Invalid transaction reference", HTTP_BAD_REQUEST);
+    TRANSACTION_INVALID_REFERENCE("Invalid transaction reference", HTTP_BAD_REQUEST), 
+    ACCOUNT_TYPE_INVALID("Invalid account type", HTTP_BAD_REQUEST);
 
     private final String message;
     private final Integer statusCode;

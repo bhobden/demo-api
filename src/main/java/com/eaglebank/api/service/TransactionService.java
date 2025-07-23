@@ -74,26 +74,6 @@ public class TransactionService extends AbstractService {
     }
 
     /**
-     * Deletes a transaction by its ID for a specific account, ensuring the user is authenticated
-     * and authorized to access the account.
-     *
-     * @param accountNumber the account number
-     * @param transactionId the transaction ID
-     */
-    public void deleteTransaction(String accountNumber, String transactionId) {
-        try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.delete.duration")) {
-            userValidation.validateUserAuthenticated();
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByRequestor(account);
-
-            transactionDAO.deleteTransaction(transactionId);
-        } catch (Exception e) {
-            handleException(e);
-            return;
-        }
-    }
-
-    /**
      * Creates a new transaction (deposit or withdrawal) for a specific account.
      * Validates authentication, authorization, and transaction details.
      *

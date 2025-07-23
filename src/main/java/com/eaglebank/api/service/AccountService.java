@@ -62,6 +62,7 @@ public class AccountService extends AbstractService {
     public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {
 
         // validate values here
+        accountValidation.validateNewAccount(request);
 
         BankAccountEntity account = new BankAccountEntity()
                 .setAccountNumber(IdGenerator.generateAccountNumber())

@@ -25,7 +25,7 @@ public class AuthController {
      */
     @PostMapping
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletResponse response) {
-        return ResponseEntity.ok(userService.getJWTToken(request));
+        return ResponseEntity.ok(userService.authoriseUser(request));
     }
 
 }

@@ -18,19 +18,27 @@ import java.util.List;
 /**
  * Service class for managing bank accounts.
  * <p>
- * Provides methods for creating, listing, fetching, updating, and deleting accounts,
- * with metrics and validation for each operation. All methods ensure the authenticated
+ * Provides methods for creating, listing, fetching, updating, and deleting
+ * accounts,
+ * with metrics and validation for each operation. All methods ensure the
+ * authenticated
  * user is authorized to perform the requested operation.
  * </p>
  *
  * <h3>Key Methods:</h3>
  * <ul>
- *   <li>{@link #createAccount(CreateBankAccountRequest)} - Create a new account for the authenticated user</li>
- *   <li>{@link #createAccountForUser(CreateBankAccountRequest, String)} - Create a new account for a specific user</li>
- *   <li>{@link #listAccounts()} - List all accounts for the authenticated user</li>
- *   <li>{@link #getAccount(String)} - Fetch a specific account for the authenticated user</li>
- *   <li>{@link #updateAccount(String, UpdateBankAccountRequest)} - Update an account for the authenticated user</li>
- *   <li>{@link #deleteAccount(String)} - Delete an account for the authenticated user</li>
+ * <li>{@link #createAccount(CreateBankAccountRequest)} - Create a new account
+ * for the authenticated user</li>
+ * <li>{@link #createAccountForUser(CreateBankAccountRequest, String)} - Create
+ * a new account for a specific user</li>
+ * <li>{@link #getAccounts()} - List all accounts for the authenticated
+ * user</li>
+ * <li>{@link #getAccount(String)} - Fetch a specific account for the
+ * authenticated user</li>
+ * <li>{@link #updateAccount(String, UpdateBankAccountRequest)} - Update an
+ * account for the authenticated user</li>
+ * <li>{@link #deleteAccount(String)} - Delete an account for the authenticated
+ * user</li>
  * </ul>
  */
 @Service
@@ -60,6 +68,9 @@ public class AccountService extends AbstractService {
      * @return BankAccountResponse containing the created account's details.
      */
     public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {
+
+        // validate values here
+
         BankAccountEntity account = new BankAccountEntity()
                 .setAccountNumber(IdGenerator.generateAccountNumber())
                 .setSortCode(IdGenerator.generateSortCode())
@@ -72,7 +83,7 @@ public class AccountService extends AbstractService {
                 .setOwnerUsername(userId);
         account = accountDAO.createBankAccount(account);
 
-        return buildBankAccountResponse(account);
+        return accountResponse(account);
     }
 
     /**
@@ -80,13 +91,13 @@ public class AccountService extends AbstractService {
      *
      * @return ListBankAccountsResponse containing all accounts for the user.
      */
-    public ListBankAccountsResponse listAccounts() {
+    public ListBankAccountsResponse getAccounts() {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.list.duration")) {
             userValidation.validateUserAuthenticated();
 
             List<BankAccountEntity> accounts = accountDAO.getUsersAccount(AuthUtils.getUsername());
             List<BankAccountResponse> responseList = accounts.stream()
-                    .map(this::buildBankAccountResponse)
+                    .map(this::accountResponse)
                     .toList();
 
             return new ListBankAccountsResponse().setAccounts(responseList);
@@ -94,26 +105,6 @@ public class AccountService extends AbstractService {
             handleException(e);
             return null; // Unreachable, but required for compilation
         }
-    }
-
-    /**
-     * Helper method to build a BankAccountResponse from a BankAccountEntity.
-     *
-     * @param account The BankAccountEntity to convert.
-     * @return BankAccountResponse with mapped fields.
-     */
-    private BankAccountResponse buildBankAccountResponse(BankAccountEntity account) {
-        BankAccountResponse response = new BankAccountResponse();
-        response.setAccountNumber(account.getAccountNumber());
-        response.setAccountName(account.getAccountName());
-        response.setAccountType(account.getAccountType());
-        response.setBalance(account.getBalance());
-        response.setSortCode(account.getSortCode());
-        response.setCurrency(account.getCurrency());
-        // Convert timestamps to LocalDateTime in UTC as per spec.
-        response.setCreatedTimestamp(convertInstantToLocalDateTimeUTC(account.getCreatedTimestamp()));
-        response.setUpdatedTimestamp(convertInstantToLocalDateTimeUTC(account.getUpdatedTimestamp()));
-        return response;
     }
 
     /**
@@ -126,7 +117,7 @@ public class AccountService extends AbstractService {
             userValidation.validateUserAuthenticated();
 
             BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
+            accountValidation.validateAccountAccessibleByRequestor(account);
 
             accountDAO.deleteBankAccount(account);
         } catch (Exception e) {
@@ -145,9 +136,9 @@ public class AccountService extends AbstractService {
             userValidation.validateUserAuthenticated();
 
             BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
+            accountValidation.validateAccountAccessibleByRequestor(account);
 
-            return buildBankAccountResponse(account);
+            return accountResponse(account);
         } catch (Exception e) {
             handleException(e);
             return null; // Unreachable, but required for compilation
@@ -167,22 +158,45 @@ public class AccountService extends AbstractService {
             userValidation.validateUserAuthenticated();
 
             BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
+            accountValidation.validateAccountAccessibleByRequestor(account);
 
-            if (updateRequest.getAccountName() != null) {
-                account.setAccountName(updateRequest.getAccountName());
+            if (updateRequest.getAccountName() != null
+                    && !updateRequest.getAccountName().equals(account.getAccountName())) {
+                accountValidation.validateAccountName(updateRequest.getAccountName());
+                        account.setAccountName(updateRequest.getAccountName());
             }
-            if (updateRequest.getAccountType() != null) {
+            if (updateRequest.getAccountType() != null
+                    && !updateRequest.getAccountType().equals(account.getAccountType())) {
                 account.setAccountType(updateRequest.getAccountType());
             }
 
             account.setUpdatedTimestamp(Instant.now());
 
             account = accountDAO.updateBankAccount(account);
-            return buildBankAccountResponse(account);
+            return accountResponse(account);
         } catch (Exception e) {
             handleException(e);
             return null; // Unreachable, but required for compilation
         }
+    }
+
+    /**
+     * Helper method to build a BankAccountResponse from a BankAccountEntity.
+     *
+     * @param account The BankAccountEntity to convert.
+     * @return BankAccountResponse with mapped fields.
+     */
+    private BankAccountResponse accountResponse(BankAccountEntity account) {
+        BankAccountResponse response = new BankAccountResponse();
+        response.setAccountNumber(account.getAccountNumber());
+        response.setAccountName(account.getAccountName());
+        response.setAccountType(account.getAccountType());
+        response.setBalance(account.getBalance());
+        response.setSortCode(account.getSortCode());
+        response.setCurrency(account.getCurrency());
+        // Convert timestamps to LocalDateTime in UTC as per spec.
+        response.setCreatedTimestamp(convertInstantToLocalDateTimeUTC(account.getCreatedTimestamp()));
+        response.setUpdatedTimestamp(convertInstantToLocalDateTimeUTC(account.getUpdatedTimestamp()));
+        return response;
     }
 }

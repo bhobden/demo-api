@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.eaglebank.api.dao.AccountDAO;
+import com.eaglebank.api.dao.TransactionDAO;
 import com.eaglebank.api.dao.UserDAO;
 import com.eaglebank.api.security.JwtUtil;
 import com.eaglebank.api.validation.AccountValidation;
+import com.eaglebank.api.validation.TransactionValidation;
 import com.eaglebank.api.validation.UserValidation;
 import com.eaglebank.api.validation.exception.CommonException;
 import com.eaglebank.api.validation.exception.CommonExceptionType;
@@ -60,6 +62,12 @@ public abstract class AbstractService {
 
     @Autowired
     protected AccountValidation accountValidation;
+
+    @Autowired
+    protected TransactionDAO transactionDAO;
+
+    @Autowired
+    protected TransactionValidation transactionValidation;
 
     /**
      * Handles exceptions thrown in service methods and rethrows them as appropriate

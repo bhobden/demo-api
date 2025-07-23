@@ -7,6 +7,7 @@ import AccountsPage from './components/AccountsPage';
 import UpdateUserForm from './components/UpdateUserForm';
 import RegisterForm from './components/RegisterForm';
 import AccountPage from './components/AccountPage'; 
+import CreateTransactionForm from './components/CreateTransactionForm';
 
 export default function App() {
   return (
@@ -19,6 +20,7 @@ export default function App() {
         <Route path="/user/:userId/update" element={<UpdateUserForm />} />
         <Route path="/user/:userId/accounts/create" element={<CreateAccountForm />} />
         <Route path="/user/:userId/accounts/:accountId" element={<AccountPage />} />
+        <Route path="/user/:userId/accounts/:accountNumber/transactions/create" element={<CreateTransactionForm />} />
       </Routes>
     </AuthProvider>
   );

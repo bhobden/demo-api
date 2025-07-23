@@ -1,5 +1,6 @@
-package com.eaglebank.api.controller;
+package com.eaglebank.api.controller.user;
 
+import com.eaglebank.api.controller.ControllerConstants;
 import com.eaglebank.api.model.dto.request.UpdateUserRequest;
 import com.eaglebank.api.model.dto.response.UserResponse;
 import com.eaglebank.api.service.UserService;
@@ -22,10 +23,10 @@ public class UserController {
      * @return UserResponse if found
      */
     @GetMapping
-    public ResponseEntity<UserResponse> getUserById(
+    public ResponseEntity<UserResponse> getUser(
             @PathVariable("userId") String userId,
             HttpServletRequest request) {
-        return ResponseEntity.ok(userService.getUserById(userId));
+        return ResponseEntity.ok(userService.getUser(userId));
     }
 
     /**
@@ -36,7 +37,7 @@ public class UserController {
      * @return UserResponse with updated user details
      */
     @PatchMapping
-    public ResponseEntity<UserResponse> updateUserById(
+    public ResponseEntity<UserResponse> updateUser(
             @PathVariable("userId") String userId,
             @RequestBody UpdateUserRequest updateUserRequest,
             HttpServletRequest request) {
@@ -50,7 +51,7 @@ public class UserController {
      * @return ResponseEntity with no content
      */
     @DeleteMapping
-    public ResponseEntity<Void> deleteUserById(
+    public ResponseEntity<Void> deleteUser(
             @PathVariable("userId") String userId,
             HttpServletRequest request) {
         userService.deleteUser(userId);

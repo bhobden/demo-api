@@ -13,27 +13,41 @@ export default function UserPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (jwt) {
-      getUser(userId, jwt)
-        .then(setUser)
-        .catch(setError);
+    if (!jwt) {
+      navigate("/", { replace: true });
+      return;
     }
+    getUser(userId, jwt)
+      .then(res => {
+        if (res && res.message) {
+          setError(res.message);
+          setUser(null);
+        } else {
+          setUser(res);
+          setError(null);
+        }
+      })
+      .catch(err => {
+        setError(typeof err === "string" ? err : "Failed to load user.");
+        setUser(null);
+      });
+
   }, [jwt, userId]);
 
   async function handleDelete() {
     if (jwt) {
       try {
         const response = await deleteUser(userId, jwt);
-        if(!response) {
+        if (!response) {
           setJwt(null);
           navigate(`/`);
-        }else {
+        } else {
           setError(response);
         }
-       
+
       } catch (error) {
         console.error("Failed to delete user:", error);
-        setError(error);  
+        setError(error);
       }
     }
   };
@@ -41,19 +55,19 @@ export default function UserPage() {
   return (
     <div className="form-box" role="main" aria-label="User info">
       <Menu />
-      <h2 className="form-box__title" style={{marginBottom: "1rem"}}>User Info</h2>
+      <h2 className="form-box__title" style={{ marginBottom: "1rem" }}>User Info</h2>
       {error && (
         <div className="form-box__error" role="alert">
           <strong>Error:</strong> {typeof error === "string" ? error : JSON.stringify(error, null, 2)}
         </div>
       )}
       {user ? (
-        <div className="form-box__fieldset" style={{marginBottom: "1.5rem"}}>
-          <div style={{marginBottom: "0.5rem"}}><strong>Name:</strong> {user.name}</div>
-          <div style={{marginBottom: "0.5rem"}}><strong>Email:</strong> {user.email}</div>
-          <div style={{marginBottom: "0.5rem"}}><strong>Phone:</strong> {user.phoneNumber}</div>
-          <div style={{marginBottom: "0.5rem"}}><strong>Address:</strong>
-            <div style={{marginLeft: "1rem"}}>
+        <div className="form-box__fieldset" style={{ marginBottom: "1.5rem" }}>
+          <div style={{ marginBottom: "0.5rem" }}><strong>Name:</strong> {user.name}</div>
+          <div style={{ marginBottom: "0.5rem" }}><strong>Email:</strong> {user.email}</div>
+          <div style={{ marginBottom: "0.5rem" }}><strong>Phone:</strong> {user.phoneNumber}</div>
+          <div style={{ marginBottom: "0.5rem" }}><strong>Address:</strong>
+            <div style={{ marginLeft: "1rem" }}>
               {user.address?.line1 && <div>{user.address.line1}</div>}
               {user.address?.line2 && <div>{user.address.line2}</div>}
               {user.address?.line3 && <div>{user.address.line3}</div>}
@@ -62,12 +76,12 @@ export default function UserPage() {
               {user.address?.postcode && <div>{user.address.postcode}</div>}
             </div>
           </div>
-          <div style={{marginBottom: "0.5rem"}}><strong>ID:</strong> {user.id}</div>
+          <div style={{ marginBottom: "0.5rem" }}><strong>ID:</strong> {user.id}</div>
         </div>
       ) : (
         <p>Loading...</p>
       )}
-      <button onClick={handleDelete} className="form-box__button" style={{background: "#c62828"}}>
+      <button onClick={handleDelete} className="form-box__button" style={{ background: "#c62828" }}>
         Delete User
       </button>
     </div>

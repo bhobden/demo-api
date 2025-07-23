@@ -1,5 +1,6 @@
-package com.eaglebank.api.controller;
+package com.eaglebank.api.controller.account;
 
+import com.eaglebank.api.controller.ControllerConstants;
 import com.eaglebank.api.model.dto.request.UpdateBankAccountRequest;
 import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.service.AccountService;

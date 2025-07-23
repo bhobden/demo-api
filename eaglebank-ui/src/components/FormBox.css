@@ -196,3 +196,11 @@ body, #root {
   background: #e3f2fd;
   border-color: #1976d2;
 }
+
+.form-box__button:disabled,
+button:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  filter: grayscale(25%);
+  transition: opacity 0.2s, filter 0.2s;
+}

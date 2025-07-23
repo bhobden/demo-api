@@ -1,6 +1,5 @@
 package com.eaglebank.api.model.dto.request;
 
-import com.eaglebank.api.model.entity.bankaccount.AccountType;
 import com.eaglebank.api.model.entity.bankaccount.Currency;
 import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
 

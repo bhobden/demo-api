@@ -37,7 +37,7 @@ public class TransactionDAO {
      * @param id the transaction ID
      * @return the transaction if found, or null if not found
      */
-    public TransactionEntity findTransactionById(String id) {
+    public TransactionEntity getTransaction(String id) {
         return transactionRepository.findById(id).orElse(null);
     }
 

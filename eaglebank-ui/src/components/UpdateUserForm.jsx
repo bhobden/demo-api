@@ -30,9 +30,11 @@ export default function UpdateUserForm() {
     });
 
     useEffect(() => {
-        if (jwt) {
-            getUser(userId, jwt).then(setDbUser).catch(e => setError("Failed to load user."));
+        if (!jwt) {
+            navigate("/", { replace: true });
+            return;
         }
+        getUser(userId, jwt).then(setDbUser).catch(e => setError("Failed to load user."));
     }, [jwt, userId]);
 
     useEffect(() => {

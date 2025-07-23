@@ -9,15 +9,35 @@ export default function AccountsPage() {
   const { userId } = useParams();
   const { jwt } = useAuth();
   const [accounts, setAccounts] = useState(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (jwt) {
-      getAccounts(jwt).then(setAccounts);
+    if (!jwt) {
+      navigate("/", { replace: true });
+      return;
     }
+    setError("");
+    getAccounts(jwt)
+      .then(res => {
+        if (res && res.accounts) {
+          setAccounts(res);
+        } else if (res && res.message) {
+          setError(res.message);
+          setAccounts(null);
+        } else {
+          setError("Failed to load accounts.");
+          setAccounts(null);
+        }
+      })
+      .catch(() => {
+        setError("Failed to load accounts. Please try again later.");
+        setAccounts(null);
+      });
   }, [jwt]);
 
-  function handleCreateAccount() {
+  function handleCreateAccount(e) {
+    e.preventDefault();
     navigate(`/user/${userId}/accounts/create`);
   }
 
@@ -28,15 +48,16 @@ export default function AccountsPage() {
   return (
     <div className="form-box" role="main" aria-label="Accounts info">
       <Menu />
-      <h2 className="form-box__title" style={{marginBottom: "1rem"}}>Accounts Info</h2>
+      <h2 className="form-box__title" style={{ marginBottom: "1rem" }}>Accounts Info</h2>
 
-      {accounts ? (
+      {error && <div className="form-box__error" role="alert">{error}</div>}
+
+      {accounts && !error ? (
         <div className="form-box__fieldset">
-          <legend className="form-box__legend">Your Accounts</legend>
           {accounts.accounts && accounts.accounts.length > 0 ? (
-            <ul style={{paddingLeft: 0, listStyle: "none"}}>
+            <ul style={{ paddingLeft: 0, listStyle: "none" }}>
               {accounts.accounts.map(acc => (
-                <li key={acc.accountNumber} style={{marginBottom: "1.2rem", borderBottom: "1px solid #e0e0e0", paddingBottom: "0.8rem"}}>
+                <li key={acc.accountNumber} style={{ marginBottom: "1.2rem", borderBottom: "1px solid #e0e0e0", paddingBottom: "0.8rem" }}>
                   <button
                     type="button"
                     className="account-list__item"
@@ -59,9 +80,9 @@ export default function AccountsPage() {
             <div>No accounts found.</div>
           )}
         </div>
-      ) : (
+      ) : !error ? (
         <p>Loading...</p>
-      )}
+      ) : null}
       <form onSubmit={handleCreateAccount} className="form-box__form" aria-labelledby="create-account-title">
         <button
           className="form-box__button"

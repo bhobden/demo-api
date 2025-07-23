@@ -37,6 +37,11 @@ export default function LoginForm() {
     <div className="form-box" role="main" aria-label="Login form">
       <form onSubmit={handleSubmit} className="form-box__form" aria-labelledby="login-title">
         <h2 id="login-title" className="form-box__title">Login</h2>
+        {prefillUsername && (
+          <div className="form-box__success" role="status">
+            Account created. Please use your password to log in.
+          </div>
+        )}
         {error && <div className="form-box__error" role="alert">{error}</div>}
         <label htmlFor="username" className="form-box__label">Username</label>
         <input

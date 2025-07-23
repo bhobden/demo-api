@@ -27,9 +27,9 @@ import org.springframework.stereotype.Service;
  *
  * <h3>Key Methods:</h3>
  * <ul>
- *   <li>{@link #getJWTToken(LoginRequest)} - Authenticate and generate JWT token</li>
+ *   <li>{@link #authoriseUser(LoginRequest)} - Authenticate and generate JWT token</li>
  *   <li>{@link #createUser(CreateUserRequest)} - Create a new user</li>
- *   <li>{@link #getUserById(String)} - Retrieve a user by ID</li>
+ *   <li>{@link #getUser(String)} - Retrieve a user by ID</li>
  *   <li>{@link #updateUser(String, UpdateUserRequest)} - Update user details</li>
  *   <li>{@link #deleteUser(String)} - Delete a user by ID</li>
  * </ul>
@@ -44,7 +44,7 @@ public class UserService extends AbstractService {
      * @return A map containing the JWT token if authentication is successful.
      * @throws ValidationException if credentials are invalid.
      */
-    public Object getJWTToken(LoginRequest request) {
+    public Object authoriseUser(LoginRequest request) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.generate.duration")) {
 
             UserEntity user = userDAO.getUser(request.getUsername());
@@ -114,7 +114,7 @@ public class UserService extends AbstractService {
      * @return UserResponse containing the user's details.
      * @throws ValidationException if the user is unauthorized or not found.
      */
-    public UserResponse getUserById(String userId) {
+    public UserResponse getUser(String userId) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.get.duration")) {
 
             userValidation.validateUserAuthenticated();

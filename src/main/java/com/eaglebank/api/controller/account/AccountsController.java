@@ -1,5 +1,6 @@
-package com.eaglebank.api.controller;
+package com.eaglebank.api.controller.account;
 
+import com.eaglebank.api.controller.ControllerConstants;
 import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.model.dto.response.ListBankAccountsResponse;
@@ -24,7 +25,7 @@ public class AccountsController {
 
     @GetMapping
     public ResponseEntity<ListBankAccountsResponse> listAccounts() {
-        ListBankAccountsResponse response = accountService.listAccounts();
+        ListBankAccountsResponse response = accountService.getAccounts();
         return ResponseEntity.ok(response);
     }
 }

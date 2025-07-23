@@ -1,9 +1,10 @@
-package com.eaglebank.api.controller;
+package com.eaglebank.api.controller.user;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.eaglebank.api.controller.ControllerConstants;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
 import com.eaglebank.api.model.dto.response.UserResponse;
 import com.eaglebank.api.service.UserService;

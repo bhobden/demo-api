@@ -11,8 +11,7 @@ import com.eaglebank.api.validation.exception.ValidationExceptionType;
  * Provides validation logic for bank account-related operations.
  * <p>
  * Ensures that account IDs are valid, and that the authenticated user is
- * authorized
- * to access or modify the specified bank account.
+ * authorized to access or modify the specified bank account.
  * </p>
  */
 @Component
@@ -36,8 +35,7 @@ public class AccountValidation extends AbstractValidation {
      * Uses the username from the authentication context.
      *
      * @param account The BankAccountEntity to check access for.
-     * @throws ValidationException if the user is not authorized to access the
-     *                             account.
+     * @throws ValidationException if the user is not authorized to access the account.
      */
     public void validateRequesterCanAccessAccount(BankAccountEntity account) {
         validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
@@ -50,8 +48,7 @@ public class AccountValidation extends AbstractValidation {
      *
      * @param username The username to check.
      * @param account  The BankAccountEntity to check access for.
-     * @throws ValidationException if the user is not authorized to access the
-     *                             account.
+     * @throws ValidationException if the user is not authorized to access the account.
      */
     public void validateAccountAccessibleByUser(String username, BankAccountEntity account) {
         if (StringUtils.isBlank(username) || account == null || !username.equals(account.getOwnerUsername())) {
@@ -59,10 +56,23 @@ public class AccountValidation extends AbstractValidation {
         }
     }
 
+    /**
+     * Validates that the currently authenticated user can access the given account.
+     * Shortcut for validateAccountAccessibleByUser(AuthUtils.getUsername(), account).
+     *
+     * @param account The BankAccountEntity to check access for.
+     * @throws ValidationException if the user is not authorized to access the account.
+     */
     public void validateAccountAccessibleByRequestor(BankAccountEntity account) {
         validateAccountAccessibleByUser(AuthUtils.getUsername(), account);
     }
 
+    /**
+     * Validates that the account name is not blank.
+     *
+     * @param accountName The account name to validate.
+     * @throws ValidationException if the account name is blank or null.
+     */
     public void validateAccountName(String accountName) {
         if (StringUtils.isBlank(accountName)) {
             invalid(ValidationExceptionType.ACCOUNT_NAME_INVALID);

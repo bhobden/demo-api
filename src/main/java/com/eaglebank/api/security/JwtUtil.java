@@ -15,7 +15,11 @@ import java.time.ZoneId;
 import java.util.Date;
 
 /**
- * Utility class to generate JWT tokens securely using HS256.
+ * Utility class for generating and validating JWT tokens using RSA keys.
+ * <p>
+ * Handles secure creation, parsing, and validation of JWTs for authentication and authorization.
+ * Loads private and public keys from the classpath for signing and verifying tokens.
+ * </p>
  */
 @Component
 public class JwtUtil {
@@ -24,6 +28,10 @@ public class JwtUtil {
     private final PrivateKey PRIVATE_SECRET;
     private final PublicKey PUBLIC_SECRET;
 
+    /**
+     * Loads the RSA private and public keys from the classpath.
+     * Throws a RuntimeException if the keys cannot be loaded.
+     */
     public JwtUtil() {
         try {
             String privateKeyPath = getClass().getClassLoader()
@@ -43,9 +51,9 @@ public class JwtUtil {
     }
 
     /**
-     * Generate a JWT for the given username.
-     * 
-     * @param username the user to include in token payload
+     * Generates a JWT for the given username.
+     *
+     * @param username the user to include in the token payload
      * @return signed JWT string
      */
     public String generateToken(String username) {
@@ -62,6 +70,13 @@ public class JwtUtil {
                 .compact();
     }
 
+    /**
+     * Extracts and validates claims from a JWT token.
+     *
+     * @param token the JWT string
+     * @return Claims object containing the token's payload
+     * @throws CommonException if the token is invalid
+     */
     public Claims extractClaims(String token) {
         try {
         return Jwts.parserBuilder()
@@ -77,12 +92,25 @@ public class JwtUtil {
         }
     }
 
+    /**
+     * Extracts the username (subject) from a JWT token after validating it.
+     *
+     * @param token the JWT string
+     * @return the username (subject) from the token
+     * @throws CommonException if the token is invalid or expired
+     */
     public String extractUsername(String token) {
         Claims claims = extractClaims(token);
         validateToken(claims);
         return claims.getSubject();
     }
 
+    /**
+     * Validates the expiration of the JWT claims.
+     *
+     * @param claims the Claims object to validate
+     * @throws CommonException if the token is expired
+     */
     public void validateToken(Claims claims) {
         if (claims.getExpiration().before(new Date())) {
             throw new CommonException(CommonExceptionType.EXPIRED_JWT); 

@@ -186,7 +186,7 @@ public class UserService extends AbstractService {
      * Deletes a user by ID.
      *
      * @param userId The ID of the user to delete.
-     * @throws ValidationException if the user is unauthorized or not found.
+     * @throws ValidationException if the user is unauthorized, not found, or has accounts.
      */
     public void deleteUser(String userId) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.delete.duration")) {

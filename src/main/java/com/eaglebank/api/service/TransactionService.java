@@ -28,10 +28,12 @@ import java.util.List;
 public class TransactionService extends AbstractService {
 
     /**
-     * Finds a transaction by its ID.
+     * Retrieves a transaction by its ID for a specific account, ensuring the user is authenticated
+     * and authorized to access the account.
      *
+     * @param accountNumber the account number
      * @param transactionId the transaction ID
-     * @return the transaction if found, or null if not found
+     * @return the transaction as a TransactionResponse if found, or null if not found or unauthorized
      */
     public TransactionResponse getTransaction(String accountNumber, String transactionId) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.findbyid.duration")) {
@@ -48,10 +50,11 @@ public class TransactionService extends AbstractService {
     }
 
     /**
-     * Finds all transactions for a specific account.
+     * Retrieves all transactions for a specific account, ensuring the user is authenticated
+     * and authorized to access the account.
      *
-     * @param accountNumber the account ID
-     * @return a list of transactions for the account
+     * @param accountNumber the account number
+     * @return a ListTransactionsResponse containing the list of transactions for the account
      */
     public ListTransactionsResponse getTransactions(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.findbyaccountid.duration")) {
@@ -71,8 +74,10 @@ public class TransactionService extends AbstractService {
     }
 
     /**
-     * Deletes a transaction by its ID.
+     * Deletes a transaction by its ID for a specific account, ensuring the user is authenticated
+     * and authorized to access the account.
      *
+     * @param accountNumber the account number
      * @param transactionId the transaction ID
      */
     public void deleteTransaction(String accountNumber, String transactionId) {
@@ -89,15 +94,12 @@ public class TransactionService extends AbstractService {
     }
 
     /**
-     * Performs a deposit operation on a bank account.
+     * Creates a new transaction (deposit or withdrawal) for a specific account.
+     * Validates authentication, authorization, and transaction details.
      *
      * @param accountNumber the account number
-     * @param amount        the amount to deposit
-     * @param userId        the user performing the deposit
-     * @param reference     optional reference for the transaction
-     * @return the created TransactionEntity
-     * @throws IllegalArgumentException if the amount is invalid or account not
-     *                                  found
+     * @param transactionRequest the transaction creation request
+     * @return the created transaction as a TransactionResponse
      */
     public TransactionResponse createTransaction(String accountNumber, CreateTransactionRequest transactionRequest) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.deposit.duration")) {
@@ -136,11 +138,12 @@ public class TransactionService extends AbstractService {
 
     /**
      * Saves a transaction entity and updates the associated bank account balance.
+     * Handles both deposit and withdrawal logic with validation.
      *
      * @param transactionRequest the request containing transaction details
      * @param account            the bank account associated with the transaction
      * @param userId             the ID of the user performing the transaction
-     * @return the saved transaction entity
+     * @return the saved TransactionEntity
      */
     @Transactional(isolation = Isolation.SERIALIZABLE)
     protected TransactionEntity executeTransaction(CreateTransactionRequest transactionRequest, BankAccountEntity account,

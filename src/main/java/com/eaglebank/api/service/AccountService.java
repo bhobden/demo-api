@@ -19,26 +19,18 @@ import java.util.List;
  * Service class for managing bank accounts.
  * <p>
  * Provides methods for creating, listing, fetching, updating, and deleting
- * accounts,
- * with metrics and validation for each operation. All methods ensure the
- * authenticated
- * user is authorized to perform the requested operation.
+ * accounts, with metrics and validation for each operation. All methods ensure the
+ * authenticated user is authorized to perform the requested operation.
  * </p>
  *
  * <h3>Key Methods:</h3>
  * <ul>
- * <li>{@link #createAccount(CreateBankAccountRequest)} - Create a new account
- * for the authenticated user</li>
- * <li>{@link #createAccountForUser(CreateBankAccountRequest, String)} - Create
- * a new account for a specific user</li>
- * <li>{@link #getAccounts()} - List all accounts for the authenticated
- * user</li>
- * <li>{@link #getAccount(String)} - Fetch a specific account for the
- * authenticated user</li>
- * <li>{@link #updateAccount(String, UpdateBankAccountRequest)} - Update an
- * account for the authenticated user</li>
- * <li>{@link #deleteAccount(String)} - Delete an account for the authenticated
- * user</li>
+ *   <li>{@link #createAccount(CreateBankAccountRequest)} - Create a new account for the authenticated user</li>
+ *   <li>{@link #createAccountForUser(CreateBankAccountRequest, String)} - Create a new account for a specific user</li>
+ *   <li>{@link #getAccounts()} - List all accounts for the authenticated user</li>
+ *   <li>{@link #getAccount(String)} - Fetch a specific account for the authenticated user</li>
+ *   <li>{@link #updateAccount(String, UpdateBankAccountRequest)} - Update an account for the authenticated user</li>
+ *   <li>{@link #deleteAccount(String)} - Delete an account for the authenticated user</li>
  * </ul>
  */
 @Service
@@ -64,7 +56,7 @@ public class AccountService extends AbstractService {
      * Creates a new bank account for a specific user.
      *
      * @param request The request containing account details.
-     * @param userId  The ID of the user who will own the account.
+     * @param userId  The ID of the user who will owner the account.
      * @return BankAccountResponse containing the created account's details.
      */
     public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {

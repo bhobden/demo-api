@@ -38,6 +38,7 @@ public class UserValidation extends AbstractValidation {
 
     /**
      * Regex pattern for validating international phone numbers (E.164 format).
+     * Example: +441234567890
      */
     private final static Pattern PHONE_REGEX = Pattern.compile("^\\+[1-9]\\d{1,14}$");
 
@@ -161,7 +162,7 @@ public class UserValidation extends AbstractValidation {
     }
 
     /**
-     * Validates that the phone number is not blank and matches the expected format.
+     * Validates that the phone number is not blank and matches the expected E.164 format.
      *
      * @param phoneNumber The phone number to validate.
      * @throws ValidationException if the phone number is blank or invalid.
@@ -210,6 +211,12 @@ public class UserValidation extends AbstractValidation {
         validatePassword(newUser.getPassword());
     }
 
+    /**
+     * Validates that the user has no associated accounts.
+     *
+     * @param userId The user ID to check.
+     * @throws ValidationException if the user has one or more accounts.
+     */
     public void validateUserHasNoAccounts(String userId) {
         if(!CollectionUtils.isEmpty(accountDAO.getUsersAccount(userId))){
             invalid(ValidationExceptionType.AUTH_USER_HAS_ACCOUNTS);

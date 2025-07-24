@@ -85,7 +85,7 @@ public class UserValidation extends AbstractValidation {
      */
     public void validateUserExists(UserEntity user) {
         if (user == null) {
-            invalid(ValidationExceptionType.AUTH_INVALID_USER);
+            invalid(ValidationExceptionType.USER_DOES_NOT_EXIST);
         }
         // Additional checks can be added here, such as checking if the user is active
         // or has the necessary permissions.
@@ -116,7 +116,7 @@ public class UserValidation extends AbstractValidation {
         validateUserId(requesterId);
         validateUserId(userId);
         if (!StringUtils.equals(requesterId, userId)) {
-            invalid(ValidationExceptionType.AUTH_UNAUTHORIZED);
+            invalid(ValidationExceptionType.USER_INVALID_ACCESS);
         }
     }
 

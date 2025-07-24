@@ -4,10 +4,11 @@ import static java.net.HttpURLConnection.HTTP_BAD_REQUEST;
 import static java.net.HttpURLConnection.HTTP_CONFLICT;
 import static java.net.HttpURLConnection.HTTP_NOT_FOUND;
 import static java.net.HttpURLConnection.HTTP_UNAUTHORIZED;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static com.eaglebank.api.validation.exception.HttpRuntimeException.HTTP_UNPROCESSABLE_ENTITY;
 
 public enum ValidationExceptionType {
-    AUTH_ACCOUNT_NOT_FOUND("Account not found", HTTP_UNAUTHORIZED),
+    AUTH_ACCOUNT_NOT_FOUND("Account not found", HTTP_NOT_FOUND),
     AUTH_INVALID_CREDENTIALS("Invalid credentials", HTTP_UNAUTHORIZED),
     ID_ALREADY_EXISTS("Id already exits", HTTP_CONFLICT), 
     ID_NOT_FOUND("Invalid login details", HTTP_UNAUTHORIZED), 
@@ -28,7 +29,10 @@ public enum ValidationExceptionType {
     TRANSACTION_CURRENCY_INVALID("Invalid transaction currency", HTTP_BAD_REQUEST), 
     TRANSACTION_INVALID_TYPE("Invalid transaction type", HTTP_BAD_REQUEST), 
     TRANSACTION_INVALID_REFERENCE("Invalid transaction reference", HTTP_BAD_REQUEST), 
-    ACCOUNT_TYPE_INVALID("Invalid account type", HTTP_BAD_REQUEST);
+    ACCOUNT_TYPE_INVALID("Invalid account type", HTTP_BAD_REQUEST), 
+    USER_INVALID_ACCESS ("You do not have access to this user", HTTP_FORBIDDEN), 
+    USER_DOES_NOT_EXIST("User does not exist", HTTP_NOT_FOUND), 
+    AUTH_ACCOUNT_NOT_ACCESSIBLE("You do not have access to this account", HTTP_FORBIDDEN);
 
     private final String message;
     private final Integer statusCode;

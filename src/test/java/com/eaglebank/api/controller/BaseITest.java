@@ -99,8 +99,12 @@ public class BaseITest {
     }
 
     public String createTransaction(String accountNumber, String jwtToken) throws Exception {
-                CreateTransactionRequest req = new CreateTransactionRequest();
-        req.setAmount(100.0);
+        return createTransaction(accountNumber,jwtToken,100);
+    }
+
+    public String createTransaction(String accountNumber, String jwtToken, double amount) throws Exception {
+        CreateTransactionRequest req = new CreateTransactionRequest();
+        req.setAmount(amount);
         req.setCurrency(Currency.GBP);
         req.setType(TransactionType.DEPOSIT);
 

@@ -22,16 +22,6 @@ import java.util.List;
  * accounts, with metrics and validation for each operation. All methods ensure the
  * authenticated user is authorized to perform the requested operation.
  * </p>
- *
- * <h3>Key Methods:</h3>
- * <ul>
- *   <li>{@link #createAccount(CreateBankAccountRequest)} - Create a new account for the authenticated user</li>
- *   <li>{@link #createAccountForUser(CreateBankAccountRequest, String)} - Create a new account for a specific user</li>
- *   <li>{@link #getAccounts()} - List all accounts for the authenticated user</li>
- *   <li>{@link #getAccount(String)} - Fetch a specific account for the authenticated user</li>
- *   <li>{@link #updateAccount(String, UpdateBankAccountRequest)} - Update an account for the authenticated user</li>
- *   <li>{@link #deleteAccount(String)} - Delete an account for the authenticated user</li>
- * </ul>
  */
 @Service
 public class AccountService extends AbstractService {
@@ -56,12 +46,10 @@ public class AccountService extends AbstractService {
      * Creates a new bank account for a specific user.
      *
      * @param request The request containing account details.
-     * @param userId  The ID of the user who will owner the account.
+     * @param userId  The ID of the user who will own the account.
      * @return BankAccountResponse containing the created account's details.
      */
     public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {
-
-        // validate values here
         accountValidation.validateNewAccount(request);
 
         BankAccountEntity account = new BankAccountEntity()
@@ -74,8 +62,8 @@ public class AccountService extends AbstractService {
                 .setCreatedTimestamp(Instant.now())
                 .setUpdatedTimestamp(Instant.now())
                 .setOwnerUsername(userId);
-        account = accountDAO.createBankAccount(account);
 
+        account = accountDAO.createBankAccount(account);
         return accountResponse(account);
     }
 
@@ -101,24 +89,6 @@ public class AccountService extends AbstractService {
     }
 
     /**
-     * Deletes a bank account by account number for the authenticated user.
-     *
-     * @param accountNumber The account number to delete.
-     */
-    public void deleteAccount(String accountNumber) {
-        try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.delete.duration")) {
-            userValidation.validateUserAuthenticated();
-
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByRequestor(account);
-
-            accountDAO.deleteBankAccount(account);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
-    /**
      * Fetches a bank account by account number for the authenticated user.
      *
      * @param accountNumber The account number to fetch.
@@ -126,11 +96,7 @@ public class AccountService extends AbstractService {
      */
     public BankAccountResponse getAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.fetch.duration")) {
-            userValidation.validateUserAuthenticated();
-
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByRequestor(account);
-
+            BankAccountEntity account = fetchAndValidateAccount(accountNumber);
             return accountResponse(account);
         } catch (Exception e) {
             handleException(e);
@@ -145,18 +111,14 @@ public class AccountService extends AbstractService {
      * @param updateRequest The request containing updated account fields.
      * @return BankAccountResponse with updated account details.
      */
-    public BankAccountResponse updateAccount(String accountNumber,
-            UpdateBankAccountRequest updateRequest) {
+    public BankAccountResponse updateAccount(String accountNumber, UpdateBankAccountRequest updateRequest) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.update.duration")) {
-            userValidation.validateUserAuthenticated();
-
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
-            accountValidation.validateAccountAccessibleByRequestor(account);
+            BankAccountEntity account = fetchAndValidateAccount(accountNumber);
 
             if (updateRequest.getAccountName() != null
                     && !updateRequest.getAccountName().equals(account.getAccountName())) {
                 accountValidation.validateAccountName(updateRequest.getAccountName());
-                        account.setAccountName(updateRequest.getAccountName());
+                account.setAccountName(updateRequest.getAccountName());
             }
             if (updateRequest.getAccountType() != null
                     && !updateRequest.getAccountType().equals(account.getAccountType())) {
@@ -164,13 +126,39 @@ public class AccountService extends AbstractService {
             }
 
             account.setUpdatedTimestamp(Instant.now());
-
             account = accountDAO.updateBankAccount(account);
             return accountResponse(account);
         } catch (Exception e) {
             handleException(e);
             return null; // Unreachable, but required for compilation
         }
+    }
+
+    /**
+     * Deletes a bank account by account number for the authenticated user.
+     *
+     * @param accountNumber The account number to delete.
+     */
+    public void deleteAccount(String accountNumber) {
+        try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.delete.duration")) {
+            BankAccountEntity account = fetchAndValidateAccount(accountNumber);
+            accountDAO.deleteBankAccount(account);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    /**
+     * Validates that the authenticated user can access the account and fetches it.
+     *
+     * @param accountNumber The account number to validate and fetch.
+     * @return BankAccountEntity if accessible.
+     */
+    public BankAccountEntity fetchAndValidateAccount(String accountNumber) {
+        userValidation.validateUserAuthenticated();
+        BankAccountEntity account = accountDAO.getAccount(accountNumber);
+        accountValidation.validateAccountAccessibleByRequestor(account);
+        return account;
     }
 
     /**

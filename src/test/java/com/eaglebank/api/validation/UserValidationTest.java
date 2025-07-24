@@ -47,7 +47,7 @@ class UserValidationTest {
     @Test
     void validateUserExists_null_throwsExceptionWithTypeAndMessage() {
         ValidationException ex = assertThrows(ValidationException.class, () -> userValidation.validateUserExists((UserEntity) null));
-        assertEquals(ValidationExceptionType.AUTH_INVALID_USER, ex.getType());
+        assertEquals(ValidationExceptionType.USER_DOES_NOT_EXIST, ex.getType());
         assertTrue(StringUtils.isNotBlank(ex.getMessage()));
     }
 
@@ -56,7 +56,7 @@ class UserValidationTest {
         try (MockedStatic<AuthUtils> authUtilsMock = mockStatic(AuthUtils.class)) {
             authUtilsMock.when(AuthUtils::getUsername).thenReturn("usr-abc123");
             ValidationException ex = assertThrows(ValidationException.class, () -> userValidation.validateRequesterCanAccessUser("usr-def456"));
-            assertEquals(ValidationExceptionType.AUTH_UNAUTHORIZED, ex.getType());
+            assertEquals(ValidationExceptionType.USER_INVALID_ACCESS, ex.getType());
             assertTrue(StringUtils.isNotBlank(ex.getMessage()));
         }
     }

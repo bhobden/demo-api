@@ -53,7 +53,14 @@ public class AccountValidation extends AbstractValidation {
      * @throws ValidationException if the user is not authorized to access the account.
      */
     public void validateAccountAccessibleByUser(String username, BankAccountEntity account) {
-        if (StringUtils.isBlank(username) || account == null || !username.equals(account.getOwnerUsername())) {
+        validateAccountExists(account);
+        if (StringUtils.isBlank(username) || !username.equals(account.getOwnerUsername())) {
+            invalid(ValidationExceptionType.AUTH_ACCOUNT_NOT_ACCESSIBLE);
+        }
+    }
+
+    public void validateAccountExists(BankAccountEntity account) {
+        if (account == null) {
             invalid(ValidationExceptionType.AUTH_ACCOUNT_NOT_FOUND);
         }
     }

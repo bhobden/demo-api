@@ -8,6 +8,9 @@ import com.eaglebank.api.model.entity.user.address.Address;
 import com.eaglebank.api.service.AccountService;
 import com.eaglebank.api.service.UserService;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.info.Info;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -33,6 +36,13 @@ import org.springframework.context.annotation.Bean;
  *   $ ./mvnw spring-boot:run
  * </pre>
  */
+@OpenAPIDefinition(
+    info = @Info(
+        title = "EagleBank API",
+        version = "1.0.0",
+        description = "Banking endpoints for user, account, and transaction flows"
+    )
+)
 @SpringBootApplication
 public class EagleBankApp {
 

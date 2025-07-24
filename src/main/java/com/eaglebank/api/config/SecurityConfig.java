@@ -39,7 +39,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/v1/users", "/v1/login").permitAll() 
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Allow public access to options
-                .requestMatchers("/actuator/**").permitAll() // Allow public access to login
+                .requestMatchers("/actuator/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs.yaml").permitAll() // Allow public access to login
                 .anyRequest().authenticated()              // Require auth for other routes
             )
             .sessionManagement(sess -> sess

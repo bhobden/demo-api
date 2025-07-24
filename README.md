@@ -189,6 +189,18 @@ curl -X DELETE http://localhost:8080/api/accounts/{accountNumber} \
 
 ---
 
+## API Documentation (Swagger / OpenAPI)
+
+- **Swagger UI:**  
+  [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+- **OpenAPI Spec:**  
+  [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
+
+You can use Swagger UI to explore and try out all API endpoints interactively.
+
+---
+
 ## Testing
 
 - Run all tests:

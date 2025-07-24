@@ -104,3 +104,10 @@ export async function getTransactionsForAccount(accountNumber, jwt) {
   });
   return res.json();
 }
+
+export async function getTransaction(accountNumber, transactionId, jwt) {
+  const response = await fetch(`/v1/accounts/${accountNumber}/transactions/${transactionId}`, {
+    headers: { Authorization: `Bearer ${jwt}` }
+  });
+  return response.json();
+}

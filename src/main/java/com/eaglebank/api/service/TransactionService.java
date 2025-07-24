@@ -42,7 +42,10 @@ public class TransactionService extends AbstractService {
             BankAccountEntity account = accountDAO.getAccount(accountNumber);
             accountValidation.validateAccountAccessibleByRequestor(account);
 
-            return transactionResponse(transactionDAO.getTransaction(transactionId));
+            TransactionEntity transaction = transactionDAO.getTransaction(transactionId);
+            transactionValidation.validateTransactionAccessibleByRequestor(transaction, account);   
+
+            return transactionResponse(transaction);
         } catch (Exception e) {
             handleException(e);
             return null;

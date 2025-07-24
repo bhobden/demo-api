@@ -10,123 +10,118 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 class TransactionControllerTest extends BaseITest {
 
-        @Test
-        void createTransaction_shouldReturn201() throws Exception {
+    @Test
+    void createTransaction_shouldReturn201() throws Exception {
+        String userName = createUser();
+        String jwtToken = loginUser(userName);
+        String accountNumber = createAccount(jwtToken);
 
-                String userName = createUser();
-                String jwtToken = loginUser(userName);
-                String accountNumber = createAccount(jwtToken);
+        CreateTransactionRequest req = new CreateTransactionRequest();
+        req.setAmount(100.0);
+        req.setCurrency(Currency.GBP);
+        req.setType(TransactionType.DEPOSIT);
 
-                CreateTransactionRequest req = new CreateTransactionRequest();
-                req.setAmount(100.0);
-                req.setCurrency(Currency.GBP);
-                req.setType(TransactionType.DEPOSIT);
+        mockMvc.perform(post("/v1/accounts/" + accountNumber + "/transactions")
+                .header("Authorization", jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.id").isNotEmpty());
+    }
 
-                mockMvc.perform(post("/v1/accounts/" + accountNumber + "/transactions")
-                                .header("Authorization", jwtToken)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(req)))
-                                .andExpect(status().isCreated())
-                                .andExpect(jsonPath("$.id").isNotEmpty());
-        }
+    @Test
+    void listTransactions_shouldReturn200() throws Exception {
+        String userName = createUser();
+        String jwtToken = loginUser(userName);
+        String accountNumber = createAccount(jwtToken);
+        String transactionId = createTransaction(accountNumber, jwtToken);
 
-        @Test
-        void listTransactions_shouldReturn200() throws Exception {
+        mockMvc.perform(get("/v1/accounts/" + accountNumber + "/transactions")
+                .header("Authorization", jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.transactions[0].id").value(transactionId));
+    }
 
-                String userName = createUser();
-                String jwtToken = loginUser(userName);
-                String accountNumber = createAccount(jwtToken);
-                String transactionId = createTransaction(accountNumber, jwtToken);
+    @Test
+    void fetchTransaction_shouldReturn200() throws Exception {
+        String userName = createUser();
+        String jwtToken = loginUser(userName);
+        String accountNumber = createAccount(jwtToken);
+        String transactionId = createTransaction(accountNumber, jwtToken);
 
-                mockMvc.perform(get("/v1/accounts/" + accountNumber + "/transactions")
-                                .header("Authorization", jwtToken))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.transactions[0].id").value(transactionId));
-        }
+        mockMvc.perform(get("/v1/accounts/" + accountNumber + "/transactions/" + transactionId)
+                .header("Authorization", jwtToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(transactionId));
+    }
 
-       
-        void fetchTransaction_shouldReturn200() throws Exception {
+    @Test
+    void createTransaction_shouldReturn401IfNoAuth() throws Exception {
+        CreateTransactionRequest req = new CreateTransactionRequest();
+        req.setAmount(100.0);
+        req.setCurrency(Currency.GBP);
+        req.setType(TransactionType.DEPOSIT);
 
-                String userName = createUser();
-                String jwtToken = loginUser(userName);
-                String accountNumber = createAccount(jwtToken);
-                String transactionId = createTransaction(accountNumber, jwtToken);
+        mockMvc.perform(post("/v1/accounts/01234567/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isForbidden());
+    }
 
-                mockMvc.perform(get("/v1/accounts/" + accountNumber + "/transactions/" + transactionId)
-                                .header("Authorization", jwtToken))
-                                .andExpect(status().isOk())
-                                .andExpect(jsonPath("$.id").value(transactionId));
-        }
+    @Test
+    void createTransaction_shouldReturn400ForInvalidRequest() throws Exception {
+        String userName = createUser();
+        String jwtToken = loginUser(userName);
+        String accountNumber = createAccount(jwtToken);
 
-        @Test
-        void createTransaction_shouldReturn401IfNoAuth() throws Exception {
+        CreateTransactionRequest req = new CreateTransactionRequest();
+        // Missing required fields
 
-                CreateTransactionRequest req = new CreateTransactionRequest();
-                req.setAmount(100.0);
-                req.setCurrency(Currency.GBP);
-                req.setType(TransactionType.DEPOSIT);
+        mockMvc.perform(post("/v1/accounts/" + accountNumber + "/transactions")
+                .header("Authorization", jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isBadRequest());
+    }
 
-                mockMvc.perform(post("/v1/accounts/01234567/transactions")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(req)))
-                                .andExpect(status().isForbidden());
-        }
+    @Test
+    void fetchTransaction_shouldReturn404IfNotFound() throws Exception {
+        String userName = createUser();
+        String jwtToken = loginUser(userName);
+        String accountNumber = createAccount(jwtToken);
+        mockMvc.perform(get("/v1/accounts/" + accountNumber + "/transactions/tan-notfound")
+                .header("Authorization", jwtToken))
+                .andExpect(status().isNotFound());
+    }
 
-        @Test
-        void createTransaction_shouldReturn400ForInvalidRequest() throws Exception {
+    @Test
+    void createTransaction_shouldReturn403IfForbidden() throws Exception {
+        CreateTransactionRequest req = new CreateTransactionRequest();
+        req.setAmount(100.0);
+        req.setCurrency(Currency.GBP);
+        req.setType(TransactionType.DEPOSIT);
 
-                String userName = createUser();
-                String jwtToken = loginUser(userName);
-                String accountNumber = createAccount(jwtToken);
+        mockMvc.perform(post("/v1/accounts/01234567/transactions")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isForbidden());
+    }
 
-                CreateTransactionRequest req = new CreateTransactionRequest();
-                // Missing required fields
+    @Test
+    void createTransaction_shouldReturn422IfInsufficientFunds() throws Exception {
+        String userName = createUser();
+        String jwtToken = loginUser(userName);
+        String accountNumber = createAccount(jwtToken);
 
-                mockMvc.perform(post("/v1/accounts/" + accountNumber + "/transactions")
-                                .header("Authorization", jwtToken)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(req)))
-                                .andExpect(status().isBadRequest());
-        }
+        CreateTransactionRequest req = new CreateTransactionRequest();
+        req.setAmount(100.99); // Over the allowed maximum
+        req.setCurrency(Currency.GBP);
+        req.setType(TransactionType.WITHDRAWAL);
 
-        
-        void fetchTransaction_shouldReturn404IfNotFound() throws Exception {
-                String userName = createUser();
-                String jwtToken = loginUser(userName);
-                String accountNumber = createAccount(jwtToken);
-                mockMvc.perform(get("/v1/accounts/" + accountNumber + "/transactions/tan-notfound")
-                                .header("Authorization", jwtToken))
-                                .andExpect(status().isNotFound());
-        }
-
-        @Test
-        void createTransaction_shouldReturn403IfForbidden() throws Exception {
-                CreateTransactionRequest req = new CreateTransactionRequest();
-                req.setAmount(100.0);
-                req.setCurrency(Currency.GBP);
-                req.setType(TransactionType.DEPOSIT);
-
-                mockMvc.perform(post("/v1/accounts/01234567/transactions")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(req)))
-                                .andExpect(status().isForbidden());
-        }
-
-        @Test
-        void createTransaction_shouldReturn422IfInsufficientFunds() throws Exception {
-                String userName = createUser();
-                String jwtToken = loginUser(userName);
-                String accountNumber = createAccount(jwtToken);
-
-                CreateTransactionRequest req = new CreateTransactionRequest();
-                req.setAmount(100.99); // Over the allowed maximum
-                req.setCurrency(Currency.GBP);
-                req.setType(TransactionType.WITHDRAWAL);
-
-                mockMvc.perform(post("/v1/accounts/" + accountNumber + "/transactions")
-                                .header("Authorization", jwtToken)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(objectMapper.writeValueAsString(req)))
-                                .andExpect(status().isUnprocessableEntity());
-        }
+        mockMvc.perform(post("/v1/accounts/" + accountNumber + "/transactions")
+                .header("Authorization", jwtToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(req)))
+                .andExpect(status().isUnprocessableEntity());
+    }
 }

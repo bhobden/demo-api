@@ -22,9 +22,9 @@ public class TransactionController {
      */
     @GetMapping
     public ResponseEntity<TransactionResponse> getTransaction(
-            @PathVariable String accountNumber,
-            @PathVariable String transactionId) {
-        TransactionResponse response = transactionService.getTransaction(accountNumber, transactionId);
+            @PathVariable("accountId") String accountId,
+            @PathVariable("transactionId") String transactionId) {
+        TransactionResponse response = transactionService.getTransaction(accountId, transactionId);
         return ResponseEntity.ok(response);
     }
 }

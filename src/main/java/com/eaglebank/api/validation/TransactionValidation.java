@@ -172,4 +172,9 @@ public class TransactionValidation extends AbstractValidation {
         validateTransactionAmount(transactionRequest);
         //validateTransactionReference(transactionRequest); // Uncomment if reference is mandatory
     }
+
+    public void validateTransactionAccessibleByRequestor(TransactionEntity transaction, BankAccountEntity account) {
+        validateTransactionExists(transaction);
+        validateTransactionIsForAccount(transaction, account);
+    }
 }

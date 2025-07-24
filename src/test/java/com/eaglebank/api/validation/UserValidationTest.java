@@ -249,5 +249,4 @@ class UserValidationTest {
         ValidationException ex = assertThrows(ValidationException.class, () -> userValidation.validateName("   "));
         assertEquals(ValidationExceptionType.USER_INVALID_NAME, ex.getType());
     }
-
 }

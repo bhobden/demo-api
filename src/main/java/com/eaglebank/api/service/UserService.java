@@ -5,13 +5,12 @@ import com.eaglebank.api.metrics.MetricScopeFactory;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
 import com.eaglebank.api.model.dto.request.LoginRequest;
 import com.eaglebank.api.model.dto.request.UpdateUserRequest;
+import com.eaglebank.api.model.dto.response.LoginResponse;
 import com.eaglebank.api.model.dto.response.UserResponse;
 import com.eaglebank.api.model.entity.user.UserEntity;
 import com.eaglebank.api.security.IdGenerator;
 import com.eaglebank.api.validation.exception.ValidationException;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
-
-import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -33,12 +32,11 @@ public class UserService extends AbstractService {
      */
     public Object authoriseUser(LoginRequest request) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.user.generate.duration")) {
-            UserEntity user = userDAO.getUser(request.getUsername());
-            if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                throw new ValidationException(ValidationExceptionType.AUTH_INVALID_CREDENTIALS);
-            }
+
+            userValidation.validateLogin(request);
+
             String token = jwtUtil.generateToken(request.getUsername());
-            return Map.of("jwt", token);
+            return new LoginResponse().setJwt(token);
         } catch (Exception e) {
             handleException(e);
             return null; // Unreachable, but required for compilation

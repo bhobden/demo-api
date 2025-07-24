@@ -4,15 +4,18 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import com.eaglebank.api.dao.AccountDAO;
 import com.eaglebank.api.dao.UserDAO;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
+import com.eaglebank.api.model.dto.request.LoginRequest;
 import com.eaglebank.api.model.entity.user.UserEntity;
 import com.eaglebank.api.model.entity.user.address.Address;
 import com.eaglebank.api.security.AuthUtils;
+import com.eaglebank.api.validation.exception.ValidationException;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
 
 /**
@@ -35,6 +38,9 @@ public class UserValidation extends AbstractValidation {
 
     @Autowired
     protected AccountDAO accountDAO;
+
+    @Autowired
+    protected PasswordEncoder passwordEncoder;
 
     /**
      * Regex pattern for validating international phone numbers (E.164 format).
@@ -162,7 +168,8 @@ public class UserValidation extends AbstractValidation {
     }
 
     /**
-     * Validates that the phone number is not blank and matches the expected E.164 format.
+     * Validates that the phone number is not blank and matches the expected E.164
+     * format.
      *
      * @param phoneNumber The phone number to validate.
      * @throws ValidationException if the phone number is blank or invalid.
@@ -218,8 +225,26 @@ public class UserValidation extends AbstractValidation {
      * @throws ValidationException if the user has one or more accounts.
      */
     public void validateUserHasNoAccounts(String userId) {
-        if(!CollectionUtils.isEmpty(accountDAO.getUsersAccount(userId))){
+        // Check if the user has any bank accounts associated.
+        // If so, throw a validation exception to prevent deletion.
+        if (!CollectionUtils.isEmpty(accountDAO.getUsersAccount(userId))) {
             invalid(ValidationExceptionType.AUTH_USER_HAS_ACCOUNTS);
         }
     }
+
+    /**
+     * Validates login credentials for a user.
+     *
+     * @param request The login request containing username and password.
+     * @throws ValidationException if credentials are invalid.
+     */
+    public void validateLogin(LoginRequest request) {
+        // Fetch the user by username and check password.
+        // If not found or password does not match, throw a validation exception.
+        UserEntity user = userDAO.getUser(request.getUsername());
+        if (user == null || !passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            invalid(ValidationExceptionType.AUTH_INVALID_CREDENTIALS);
+        }
+    }
+
 }

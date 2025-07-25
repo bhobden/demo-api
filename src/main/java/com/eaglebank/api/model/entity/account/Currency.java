@@ -1,4 +1,4 @@
-package com.eaglebank.api.model.entity.bankaccount;
+package com.eaglebank.api.model.entity.account;
 
 import java.util.Arrays;
 import java.util.Collections;

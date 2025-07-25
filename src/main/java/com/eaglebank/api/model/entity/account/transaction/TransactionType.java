@@ -1,4 +1,4 @@
-package com.eaglebank.api.model.entity.bankaccount.transaction;
+package com.eaglebank.api.model.entity.account.transaction;
 
 /**
  * Enum for transaction types.

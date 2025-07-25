@@ -1,4 +1,4 @@
-package com.eaglebank.api.model.entity.bankaccount;
+package com.eaglebank.api.model.entity.account;
 
 import jakarta.persistence.*;
 import java.time.Instant;
@@ -15,7 +15,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * </p>
  */
 @Entity
-public class BankAccountEntity {
+public class AccountEntity {
 
     @Id
     @Column(nullable = false, unique = true, length = 16)
@@ -51,7 +51,7 @@ public class BankAccountEntity {
         return accountNumber;
     }
 
-    public BankAccountEntity setAccountNumber(String accountNumber) {
+    public AccountEntity setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
         return this;
     }
@@ -60,7 +60,7 @@ public class BankAccountEntity {
         return sortCode;
     }
 
-    public BankAccountEntity setSortCode(String sortCode) {
+    public AccountEntity setSortCode(String sortCode) {
         this.sortCode = sortCode;
         return this;
     }
@@ -69,7 +69,7 @@ public class BankAccountEntity {
         return name;
     }
 
-    public BankAccountEntity setAccountName(String name) {
+    public AccountEntity setAccountName(String name) {
         this.name = name;
         return this;
     }
@@ -78,7 +78,7 @@ public class BankAccountEntity {
         return accountType;
     }
 
-    public BankAccountEntity setAccountType(AccountType accountType) {
+    public AccountEntity setAccountType(AccountType accountType) {
         this.accountType = accountType;
         return this;
     }
@@ -87,7 +87,7 @@ public class BankAccountEntity {
         return balance;
     }
 
-    public BankAccountEntity setBalance(Double balance) {
+    public AccountEntity setBalance(Double balance) {
         this.balance = balance;
         return this;
     }
@@ -96,7 +96,7 @@ public class BankAccountEntity {
         return currency;
     }
 
-    public BankAccountEntity setCurrency(Currency currency) {
+    public AccountEntity setCurrency(Currency currency) {
         this.currency = currency;
         return this;
     }
@@ -105,7 +105,7 @@ public class BankAccountEntity {
         return ownerUsername;
     }
 
-    public BankAccountEntity setOwnerUsername(String ownerUsername) {
+    public AccountEntity setOwnerUsername(String ownerUsername) {
         this.ownerUsername = ownerUsername;
         return this;
     }
@@ -114,7 +114,7 @@ public class BankAccountEntity {
         return createdTimestamp;
     }
 
-    public BankAccountEntity setCreatedTimestamp(Instant createdTimestamp) {
+    public AccountEntity setCreatedTimestamp(Instant createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
         return this;
     }
@@ -123,7 +123,7 @@ public class BankAccountEntity {
         return updatedTimestamp;
     }
 
-    public BankAccountEntity setUpdatedTimestamp(Instant updatedTimestamp) {
+    public AccountEntity setUpdatedTimestamp(Instant updatedTimestamp) {
         this.updatedTimestamp = updatedTimestamp;
         return this;
     }
@@ -135,7 +135,7 @@ public class BankAccountEntity {
         if (o == null || getClass() != o.getClass())
             return false;
 
-        BankAccountEntity that = (BankAccountEntity) o;
+        AccountEntity that = (AccountEntity) o;
 
         return new EqualsBuilder()
                 .append(accountNumber, that.accountNumber)

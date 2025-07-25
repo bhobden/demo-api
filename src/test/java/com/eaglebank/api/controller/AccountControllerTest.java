@@ -2,7 +2,8 @@ package com.eaglebank.api.controller;
 
 import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.request.UpdateBankAccountRequest;
-import com.eaglebank.api.model.entity.bankaccount.AccountType;
+import com.eaglebank.api.model.entity.account.AccountType;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 

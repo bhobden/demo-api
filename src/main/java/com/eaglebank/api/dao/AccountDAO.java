@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
+import com.eaglebank.api.model.entity.account.AccountEntity;
 import com.eaglebank.api.repository.BankAccountRepository;
 
 /**
@@ -49,7 +49,7 @@ public class AccountDAO {
      * @param accountId The ID of the account to retrieve.
      * @return The BankAccountEntity if found, otherwise null.
      */
-    public BankAccountEntity getAccount(String accountId) {
+    public AccountEntity getAccount(String accountId) {
         return accountRepository.findById(accountId)
                 .orElse(null);
     }
@@ -60,7 +60,7 @@ public class AccountDAO {
      * @param ownerUsername The username of the account owner.
      * @return List of BankAccountEntity belonging to the user.
      */
-    public List<BankAccountEntity> getUsersAccount(String ownerUsername) {
+    public List<AccountEntity> getUsersAccount(String ownerUsername) {
         return accountRepository.findByOwnerUsername(ownerUsername);
     }
 
@@ -70,7 +70,7 @@ public class AccountDAO {
      * @param account The BankAccountEntity to create.
      * @return The saved BankAccountEntity.
      */
-    public BankAccountEntity createBankAccount(BankAccountEntity account) {
+    public AccountEntity createBankAccount(AccountEntity account) {
         return accountRepository.save(account);
     }
 
@@ -79,7 +79,7 @@ public class AccountDAO {
      *
      * @param account The BankAccountEntity to delete.
      */
-    public void deleteBankAccount(BankAccountEntity account) {
+    public void deleteBankAccount(AccountEntity account) {
         accountRepository.delete(account);
     }
 
@@ -89,7 +89,7 @@ public class AccountDAO {
      * @param account The BankAccountEntity to update.
      * @return The updated BankAccountEntity.
      */
-    public BankAccountEntity updateBankAccount(BankAccountEntity account) {
+    public AccountEntity updateBankAccount(AccountEntity account) {
         return accountRepository.save(account);
     }
 }

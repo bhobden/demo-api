@@ -15,9 +15,9 @@ import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.request.CreateTransactionRequest;
 import com.eaglebank.api.model.dto.request.CreateUserRequest;
 import com.eaglebank.api.model.dto.request.LoginRequest;
-import com.eaglebank.api.model.entity.bankaccount.AccountType;
-import com.eaglebank.api.model.entity.bankaccount.Currency;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
+import com.eaglebank.api.model.entity.account.AccountType;
+import com.eaglebank.api.model.entity.account.Currency;
+import com.eaglebank.api.model.entity.account.transaction.TransactionType;
 import com.eaglebank.api.model.entity.user.address.Address;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

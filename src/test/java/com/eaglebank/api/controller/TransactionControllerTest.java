@@ -1,8 +1,9 @@
 package com.eaglebank.api.controller;
 
 import com.eaglebank.api.model.dto.request.CreateTransactionRequest;
-import com.eaglebank.api.model.entity.bankaccount.Currency;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
+import com.eaglebank.api.model.entity.account.Currency;
+import com.eaglebank.api.model.entity.account.transaction.TransactionType;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

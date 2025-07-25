@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import com.eaglebank.api.model.dto.request.CreateTransactionRequest;
-import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionEntity;
+import com.eaglebank.api.model.entity.account.AccountEntity;
+import com.eaglebank.api.model.entity.account.transaction.TransactionEntity;
 import com.eaglebank.api.validation.exception.ValidationExceptionType;
 
 /**
@@ -26,7 +26,7 @@ public class TransactionValidation extends AbstractValidation {
      * @param account The bank account entity.
      * @throws ValidationException if any validation fails.
      */
-    public void validateCanWithdraw(CreateTransactionRequest request, BankAccountEntity account) {
+    public void validateCanWithdraw(CreateTransactionRequest request, AccountEntity account) {
         validateCompatibleCurrency(request, account);
         validateTransactionAmount(request);
         validateFundsAvailable(request, account);
@@ -40,7 +40,7 @@ public class TransactionValidation extends AbstractValidation {
      * @param account The bank account entity.
      * @throws ValidationException if any validation fails.
      */
-    public void validateCanDeposit(CreateTransactionRequest request, BankAccountEntity account) {
+    public void validateCanDeposit(CreateTransactionRequest request, AccountEntity account) {
         validateCompatibleCurrency(request, account);
         validateTransactionAmount(request);
     }
@@ -52,7 +52,7 @@ public class TransactionValidation extends AbstractValidation {
      * @param account The bank account entity.
      * @throws ValidationException if currencies do not match.
      */
-    public void validateCompatibleCurrency(CreateTransactionRequest request, BankAccountEntity account) {
+    public void validateCompatibleCurrency(CreateTransactionRequest request, AccountEntity account) {
         if (!request.getCurrency().equals(account.getCurrency())) {
             invalid(ValidationExceptionType.TRANSACTION_CURRENCY_MISMATCH);
         }
@@ -65,7 +65,7 @@ public class TransactionValidation extends AbstractValidation {
      * @param account The bank account entity.
      * @throws ValidationException if funds are insufficient.
      */
-    public void validateFundsAvailable(CreateTransactionRequest request, BankAccountEntity account) {
+    public void validateFundsAvailable(CreateTransactionRequest request, AccountEntity account) {
         if (request.getAmount() > account.getBalance()) {
             invalid(ValidationExceptionType.TRANSACTION_INSUFFICIENT_FUNDS);
         }
@@ -90,7 +90,7 @@ public class TransactionValidation extends AbstractValidation {
      * @param account The bank account entity.
      * @throws ValidationException if the transaction is not for the account.
      */
-    public void validateTransactionIsForAccount(TransactionEntity transaction, BankAccountEntity account) {
+    public void validateTransactionIsForAccount(TransactionEntity transaction, AccountEntity account) {
         if (!transaction.getAccountNumber().equals(account.getAccountNumber())) {
             invalid(ValidationExceptionType.TRANSACTION_NOT_FOUND);
         }
@@ -173,7 +173,7 @@ public class TransactionValidation extends AbstractValidation {
         //validateTransactionReference(transactionRequest); // Uncomment if reference is mandatory
     }
 
-    public void validateTransactionAccessibleByRequestor(TransactionEntity transaction, BankAccountEntity account) {
+    public void validateTransactionAccessibleByRequestor(TransactionEntity transaction, AccountEntity account) {
         validateTransactionExists(transaction);
         validateTransactionIsForAccount(transaction, account);
     }

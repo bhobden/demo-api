@@ -6,8 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.eaglebank.api.model.entity.bankaccount.Currency;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
+import com.eaglebank.api.model.entity.account.Currency;
+import com.eaglebank.api.model.entity.account.transaction.TransactionType;
 
 /**
  * DTO representing a transaction response.

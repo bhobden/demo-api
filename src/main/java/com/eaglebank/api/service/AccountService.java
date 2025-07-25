@@ -6,8 +6,8 @@ import com.eaglebank.api.model.dto.request.CreateBankAccountRequest;
 import com.eaglebank.api.model.dto.request.UpdateBankAccountRequest;
 import com.eaglebank.api.model.dto.response.BankAccountResponse;
 import com.eaglebank.api.model.dto.response.ListBankAccountsResponse;
-import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
-import com.eaglebank.api.model.entity.bankaccount.Currency;
+import com.eaglebank.api.model.entity.account.AccountEntity;
+import com.eaglebank.api.model.entity.account.Currency;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.security.IdGenerator;
 import org.springframework.stereotype.Service;
@@ -52,7 +52,7 @@ public class AccountService extends AbstractService {
     public BankAccountResponse createAccountForUser(CreateBankAccountRequest request, String userId) {
         accountValidation.validateNewAccount(request);
 
-        BankAccountEntity account = new BankAccountEntity()
+        AccountEntity account = new AccountEntity()
                 .setAccountNumber(IdGenerator.generateAccountNumber())
                 .setSortCode(IdGenerator.generateSortCode())
                 .setAccountName(request.getAccountName())
@@ -76,7 +76,7 @@ public class AccountService extends AbstractService {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.list.duration")) {
             userValidation.validateUserAuthenticated();
 
-            List<BankAccountEntity> accounts = accountDAO.getUsersAccount(AuthUtils.getUsername());
+            List<AccountEntity> accounts = accountDAO.getUsersAccount(AuthUtils.getUsername());
             List<BankAccountResponse> responseList = accounts.stream()
                     .map(this::accountResponse)
                     .toList();
@@ -96,7 +96,7 @@ public class AccountService extends AbstractService {
      */
     public BankAccountResponse getAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.fetch.duration")) {
-            BankAccountEntity account = fetchAndValidateAccount(accountNumber);
+            AccountEntity account = fetchAndValidateAccount(accountNumber);
             return accountResponse(account);
         } catch (Exception e) {
             handleException(e);
@@ -113,7 +113,7 @@ public class AccountService extends AbstractService {
      */
     public BankAccountResponse updateAccount(String accountNumber, UpdateBankAccountRequest updateRequest) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.update.duration")) {
-            BankAccountEntity account = fetchAndValidateAccount(accountNumber);
+            AccountEntity account = fetchAndValidateAccount(accountNumber);
 
             if (updateRequest.getAccountName() != null
                     && !updateRequest.getAccountName().equals(account.getAccountName())) {
@@ -141,7 +141,7 @@ public class AccountService extends AbstractService {
      */
     public void deleteAccount(String accountNumber) {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.account.delete.duration")) {
-            BankAccountEntity account = fetchAndValidateAccount(accountNumber);
+            AccountEntity account = fetchAndValidateAccount(accountNumber);
             accountDAO.deleteBankAccount(account);
         } catch (Exception e) {
             handleException(e);
@@ -154,9 +154,9 @@ public class AccountService extends AbstractService {
      * @param accountNumber The account number to validate and fetch.
      * @return BankAccountEntity if accessible.
      */
-    public BankAccountEntity fetchAndValidateAccount(String accountNumber) {
+    public AccountEntity fetchAndValidateAccount(String accountNumber) {
         userValidation.validateUserAuthenticated();
-        BankAccountEntity account = accountDAO.getAccount(accountNumber);
+        AccountEntity account = accountDAO.getAccount(accountNumber);
         accountValidation.validateAccountAccessibleByRequestor(account);
         return account;
     }
@@ -167,7 +167,7 @@ public class AccountService extends AbstractService {
      * @param account The BankAccountEntity to convert.
      * @return BankAccountResponse with mapped fields.
      */
-    private BankAccountResponse accountResponse(BankAccountEntity account) {
+    private BankAccountResponse accountResponse(AccountEntity account) {
         BankAccountResponse response = new BankAccountResponse();
         response.setAccountNumber(account.getAccountNumber());
         response.setAccountName(account.getAccountName());

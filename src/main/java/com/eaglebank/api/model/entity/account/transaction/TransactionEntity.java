@@ -1,4 +1,4 @@
-package com.eaglebank.api.model.entity.bankaccount.transaction;
+package com.eaglebank.api.model.entity.account.transaction;
 
 import jakarta.persistence.*;
 
@@ -8,7 +8,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import com.eaglebank.api.model.entity.bankaccount.Currency;
+import com.eaglebank.api.model.entity.account.Currency;
 
 /**
  * Entity representing a bank account transaction.
@@ -59,64 +59,72 @@ public class TransactionEntity {
         return id;
     }
 
-    public void setId(String id) {
+    public TransactionEntity setId(String id) {
         this.id = id;
+        return this;
     }
 
     public double getAmount() {
         return amount;
     }
 
-    public void setAmount(double amount) {
+    public TransactionEntity setAmount(double amount) {
         this.amount = amount;
+        return this;
     }
 
     public Currency getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public TransactionEntity setCurrency(Currency currency) {
         this.currency = currency;
+        return this;
     }
 
     public TransactionType getType() {
         return type;
     }
 
-    public void setType(TransactionType type) {
+    public TransactionEntity setType(TransactionType type) {
         this.type = type;
+        return this;
     }
 
     public String getReference() {
         return reference;
     }
 
-    public void setReference(String reference) {
+    public TransactionEntity setReference(String reference) {
         this.reference = reference;
+        return this;
     }
 
     public String getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public TransactionEntity setUserId(String userId) {
         this.userId = userId;
+        return this;
     }
 
     public String getAccountNumber() {
         return accountNumber;
     }
 
-    public void setAccountNumber(String accountNumber) {
+    public TransactionEntity setAccountNumber(String accountNumber) {
         this.accountNumber = accountNumber;
+        return this;
     }
 
     public Instant getCreatedTimestamp() {
         return createdTimestamp;
     }
 
-    public void setCreatedTimestamp(Instant createdTimestamp) {
+    public TransactionEntity setCreatedTimestamp(Instant createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
+        return this;
     }
 
     @Override

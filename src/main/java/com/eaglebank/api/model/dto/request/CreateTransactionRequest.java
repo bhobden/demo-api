@@ -1,7 +1,7 @@
 package com.eaglebank.api.model.dto.request;
 
-import com.eaglebank.api.model.entity.bankaccount.Currency;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
+import com.eaglebank.api.model.entity.account.Currency;
+import com.eaglebank.api.model.entity.account.transaction.TransactionType;
 
 public class CreateTransactionRequest {
     private double amount;

@@ -1,6 +1,6 @@
 package com.eaglebank.api.dao;
 
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionEntity;
+import com.eaglebank.api.model.entity.account.transaction.TransactionEntity;
 import com.eaglebank.api.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

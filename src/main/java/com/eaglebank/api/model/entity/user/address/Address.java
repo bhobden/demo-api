@@ -25,48 +25,54 @@ public class Address {
         return line1;
     }
 
-    public void setLine1(String line1) {
+    public Address setLine1(String line1) {
         this.line1 = line1;
+        return this;
     }
 
     public String getLine2() {
         return line2;
     }
 
-    public void setLine2(String line2) {
+    public Address setLine2(String line2) {
         this.line2 = line2;
+        return this;
     }
 
     public String getLine3() {
         return line3;
     }
 
-    public void setLine3(String line3) {
+    public Address setLine3(String line3) {
         this.line3 = line3;
+        return this;
     }
 
     public String getTown() {
         return town;
     }
 
-    public void setTown(String town) {
+    public Address setTown(String town) {
         this.town = town;
+        return this;
     }
 
     public String getCounty() {
         return county;
     }
 
-    public void setCounty(String county) {
+    public Address setCounty(String county) {
         this.county = county;
+        return this;
     }
 
     public String getPostcode() {
         return postcode;
     }
 
-    public void setPostcode(String postcode) {
+    public Address setPostcode(String postcode) {
         this.postcode = postcode;
+        return this;
     }
 
     @Override

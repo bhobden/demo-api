@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionEntity;
+import com.eaglebank.api.model.entity.account.transaction.TransactionEntity;
 
 /**
  * Repository interface for accessing and managing {@link TransactionEntity} data.

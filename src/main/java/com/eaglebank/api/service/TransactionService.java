@@ -5,9 +5,9 @@ import com.eaglebank.api.metrics.MetricScopeFactory;
 import com.eaglebank.api.model.dto.request.CreateTransactionRequest;
 import com.eaglebank.api.model.dto.response.ListTransactionsResponse;
 import com.eaglebank.api.model.dto.response.TransactionResponse;
-import com.eaglebank.api.model.entity.bankaccount.BankAccountEntity;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionEntity;
-import com.eaglebank.api.model.entity.bankaccount.transaction.TransactionType;
+import com.eaglebank.api.model.entity.account.AccountEntity;
+import com.eaglebank.api.model.entity.account.transaction.TransactionEntity;
+import com.eaglebank.api.model.entity.account.transaction.TransactionType;
 import com.eaglebank.api.security.AuthUtils;
 import com.eaglebank.api.security.IdGenerator;
 
@@ -39,7 +39,7 @@ public class TransactionService extends AbstractService {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.findbyid.duration")) {
             userValidation.validateUserAuthenticated();
 
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
+            AccountEntity account = accountDAO.getAccount(accountNumber);
             accountValidation.validateAccountAccessibleByRequestor(account);
 
             TransactionEntity transaction = transactionDAO.getTransaction(transactionId);
@@ -63,7 +63,7 @@ public class TransactionService extends AbstractService {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.findbyaccountid.duration")) {
             userValidation.validateUserAuthenticated();
 
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
+            AccountEntity account = accountDAO.getAccount(accountNumber);
             accountValidation.validateAccountAccessibleByRequestor(account);
 
             List<TransactionEntity> transactions = transactionDAO.findTransactionsByAccountId(accountNumber);
@@ -88,7 +88,7 @@ public class TransactionService extends AbstractService {
         try (MetricScope scope = MetricScopeFactory.of("eaglebank.transaction.deposit.duration")) {
             
             userValidation.validateUserAuthenticated();
-            BankAccountEntity account = accountDAO.getAccount(accountNumber);
+            AccountEntity account = accountDAO.getAccount(accountNumber);
             accountValidation.validateAccountAccessibleByRequestor(account);
 
             return transactionResponse(executeTransaction(transactionRequest, account, AuthUtils.getUsername()));
@@ -129,7 +129,7 @@ public class TransactionService extends AbstractService {
      * @return the saved TransactionEntity
      */
     @Transactional(isolation = Isolation.SERIALIZABLE)
-    protected TransactionEntity executeTransaction(CreateTransactionRequest transactionRequest, BankAccountEntity account,
+    protected TransactionEntity executeTransaction(CreateTransactionRequest transactionRequest, AccountEntity account,
             String userId) {
 
         transactionValidation.validateTransactionRequest(transactionRequest);
